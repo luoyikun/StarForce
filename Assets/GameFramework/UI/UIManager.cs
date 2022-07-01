@@ -719,7 +719,7 @@ namespace GameFramework.UI
         /// <param name="priority">加载界面资源的优先级。</param>
         /// <param name="pauseCoveredUIForm">是否暂停被覆盖的界面。</param>
         /// <param name="userData">用户自定义数据。</param>
-        /// <returns>界面的序列编号。</returns>
+        /// <returns>界面的序列编号。这个编号会永恒的自增，用来突发情况，一个界面正在加载中，要关闭，先取消上一个，再打开下个，以免冲突</returns>
         public int OpenUIForm(string uiFormAssetName, string uiGroupName, int priority, bool pauseCoveredUIForm, object userData)
         {
             if (m_ResourceManager == null)

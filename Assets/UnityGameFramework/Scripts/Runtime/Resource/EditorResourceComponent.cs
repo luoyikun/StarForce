@@ -564,7 +564,7 @@ namespace UnityGameFramework.Runtime
 
             if (baseComponent.EditorResourceMode)
             {
-                baseComponent.EditorResourceHelper = this;
+                baseComponent.EditorResourceHelper = this; //编辑器模式下给EditorResourceHelper赋值
                 enabled = true;
             }
             else

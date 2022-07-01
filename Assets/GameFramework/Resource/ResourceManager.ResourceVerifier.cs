@@ -12,7 +12,7 @@ using System.IO;
 
 namespace GameFramework.Resource
 {
-    internal sealed partial class ResourceManager : GameFrameworkModule, IResourceManager
+    internal sealed partial class ResourceManager : GameFrameworkModule, IResourceManager //基于gf的
     {
         /// <summary>
         /// 资源校验器。

@@ -21,12 +21,12 @@ namespace UnityGameFramework.Runtime
     /// </summary>
     [DisallowMultipleComponent]
     [AddComponentMenu("Game Framework/Resource")]
-    public sealed class ResourceComponent : GameFrameworkComponent
+    public sealed class ResourceComponent : GameFrameworkComponent //组件是属于UGF，有unity的生命周期
     {
         private const int DefaultPriority = 0;
         private const int OneMegaBytes = 1024 * 1024;
 
-        private IResourceManager m_ResourceManager = null;
+        private IResourceManager m_ResourceManager = null; //接口为mgr，为提供管理的通用方法接口
         private EventComponent m_EventComponent = null;
         private bool m_EditorResourceMode = false;
         private bool m_ForceUnloadUnusedAssets = false;
@@ -606,6 +606,8 @@ namespace UnityGameFramework.Runtime
 
             m_EditorResourceMode = baseComponent.EditorResourceMode;
             m_ResourceManager = m_EditorResourceMode ? baseComponent.EditorResourceHelper : GameFrameworkEntry.GetModule<IResourceManager>();
+
+            Log.Info("当前资源加载mgr：" + m_ResourceManager.GetType());
             if (m_ResourceManager == null)
             {
                 Log.Fatal("Resource manager is invalid.");

@@ -22,3 +22,132 @@
 /ProjectSettings/ProjectVersion.txt
 /Packages/*
 /UnityPackageManager/*
+PC/Star Force.exe
+PC/UnityCrashHandler64.exe
+PC/UnityPlayer.dll
+PC/MonoBleedingEdge/EmbedRuntime/mono-2.0-bdwgc.dll
+PC/MonoBleedingEdge/EmbedRuntime/MonoPosixHelper.dll
+PC/MonoBleedingEdge/etc/mono/browscap.ini
+PC/MonoBleedingEdge/etc/mono/config
+PC/MonoBleedingEdge/etc/mono/2.0/DefaultWsdlHelpGenerator.aspx
+PC/MonoBleedingEdge/etc/mono/2.0/machine.config
+PC/MonoBleedingEdge/etc/mono/2.0/settings.map
+PC/MonoBleedingEdge/etc/mono/2.0/web.config
+PC/MonoBleedingEdge/etc/mono/2.0/Browsers/Compat.browser
+PC/MonoBleedingEdge/etc/mono/4.0/DefaultWsdlHelpGenerator.aspx
+PC/MonoBleedingEdge/etc/mono/4.0/machine.config
+PC/MonoBleedingEdge/etc/mono/4.0/settings.map
+PC/MonoBleedingEdge/etc/mono/4.0/web.config
+PC/MonoBleedingEdge/etc/mono/4.0/Browsers/Compat.browser
+PC/MonoBleedingEdge/etc/mono/4.5/DefaultWsdlHelpGenerator.aspx
+PC/MonoBleedingEdge/etc/mono/4.5/machine.config
+PC/MonoBleedingEdge/etc/mono/4.5/settings.map
+PC/MonoBleedingEdge/etc/mono/4.5/web.config
+PC/MonoBleedingEdge/etc/mono/4.5/Browsers/Compat.browser
+PC/MonoBleedingEdge/etc/mono/mconfig/config.xml
+PC/Star Force_Data/app.info
+PC/Star Force_Data/boot.config
+PC/Star Force_Data/globalgamemanagers
+PC/Star Force_Data/globalgamemanagers.assets
+PC/Star Force_Data/level0
+PC/Star Force_Data/level1
+PC/Star Force_Data/level2
+PC/Star Force_Data/sharedassets0.assets
+PC/Star Force_Data/sharedassets0.assets.resS
+PC/Star Force_Data/sharedassets1.assets
+PC/Star Force_Data/sharedassets1.assets.resS
+PC/Star Force_Data/sharedassets2.assets
+PC/Star Force_Data/Managed/Assembly-CSharp.dll
+PC/Star Force_Data/Managed/GameFramework.dll
+PC/Star Force_Data/Managed/ICSharpCode.SharpZipLib.dll
+PC/Star Force_Data/Managed/LitJson.dll
+PC/Star Force_Data/Managed/Mono.Security.dll
+PC/Star Force_Data/Managed/mscorlib.dll
+PC/Star Force_Data/Managed/netstandard.dll
+PC/Star Force_Data/Managed/protobuf-net.dll
+PC/Star Force_Data/Managed/System.ComponentModel.Composition.dll
+PC/Star Force_Data/Managed/System.Configuration.dll
+PC/Star Force_Data/Managed/System.Core.dll
+PC/Star Force_Data/Managed/System.Data.dll
+PC/Star Force_Data/Managed/System.Diagnostics.StackTrace.dll
+PC/Star Force_Data/Managed/System.dll
+PC/Star Force_Data/Managed/System.Drawing.dll
+PC/Star Force_Data/Managed/System.EnterpriseServices.dll
+PC/Star Force_Data/Managed/System.Globalization.Extensions.dll
+PC/Star Force_Data/Managed/System.IO.Compression.dll
+PC/Star Force_Data/Managed/System.IO.Compression.FileSystem.dll
+PC/Star Force_Data/Managed/System.Net.Http.dll
+PC/Star Force_Data/Managed/System.Numerics.dll
+PC/Star Force_Data/Managed/System.Runtime.Serialization.dll
+PC/Star Force_Data/Managed/System.Runtime.Serialization.Xml.dll
+PC/Star Force_Data/Managed/System.ServiceModel.Internals.dll
+PC/Star Force_Data/Managed/System.Transactions.dll
+PC/Star Force_Data/Managed/System.Xml.dll
+PC/Star Force_Data/Managed/System.Xml.Linq.dll
+PC/Star Force_Data/Managed/System.Xml.XPath.XDocument.dll
+PC/Star Force_Data/Managed/Unity.TextMeshPro.dll
+PC/Star Force_Data/Managed/Unity.Timeline.dll
+PC/Star Force_Data/Managed/UnityEngine.AccessibilityModule.dll
+PC/Star Force_Data/Managed/UnityEngine.AIModule.dll
+PC/Star Force_Data/Managed/UnityEngine.AndroidJNIModule.dll
+PC/Star Force_Data/Managed/UnityEngine.AnimationModule.dll
+PC/Star Force_Data/Managed/UnityEngine.ARModule.dll
+PC/Star Force_Data/Managed/UnityEngine.AssetBundleModule.dll
+PC/Star Force_Data/Managed/UnityEngine.AudioModule.dll
+PC/Star Force_Data/Managed/UnityEngine.ClothModule.dll
+PC/Star Force_Data/Managed/UnityEngine.ClusterInputModule.dll
+PC/Star Force_Data/Managed/UnityEngine.ClusterRendererModule.dll
+PC/Star Force_Data/Managed/UnityEngine.CoreModule.dll
+PC/Star Force_Data/Managed/UnityEngine.CrashReportingModule.dll
+PC/Star Force_Data/Managed/UnityEngine.DirectorModule.dll
+PC/Star Force_Data/Managed/UnityEngine.dll
+PC/Star Force_Data/Managed/UnityEngine.DSPGraphModule.dll
+PC/Star Force_Data/Managed/UnityEngine.GameCenterModule.dll
+PC/Star Force_Data/Managed/UnityEngine.GridModule.dll
+PC/Star Force_Data/Managed/UnityEngine.HotReloadModule.dll
+PC/Star Force_Data/Managed/UnityEngine.ImageConversionModule.dll
+PC/Star Force_Data/Managed/UnityEngine.IMGUIModule.dll
+PC/Star Force_Data/Managed/UnityEngine.InputLegacyModule.dll
+PC/Star Force_Data/Managed/UnityEngine.InputModule.dll
+PC/Star Force_Data/Managed/UnityEngine.JSONSerializeModule.dll
+PC/Star Force_Data/Managed/UnityEngine.LocalizationModule.dll
+PC/Star Force_Data/Managed/UnityEngine.ParticleSystemModule.dll
+PC/Star Force_Data/Managed/UnityEngine.PerformanceReportingModule.dll
+PC/Star Force_Data/Managed/UnityEngine.Physics2DModule.dll
+PC/Star Force_Data/Managed/UnityEngine.PhysicsModule.dll
+PC/Star Force_Data/Managed/UnityEngine.ProfilerModule.dll
+PC/Star Force_Data/Managed/UnityEngine.ScreenCaptureModule.dll
+PC/Star Force_Data/Managed/UnityEngine.SharedInternalsModule.dll
+PC/Star Force_Data/Managed/UnityEngine.SpriteMaskModule.dll
+PC/Star Force_Data/Managed/UnityEngine.SpriteShapeModule.dll
+PC/Star Force_Data/Managed/UnityEngine.StreamingModule.dll
+PC/Star Force_Data/Managed/UnityEngine.SubstanceModule.dll
+PC/Star Force_Data/Managed/UnityEngine.SubsystemsModule.dll
+PC/Star Force_Data/Managed/UnityEngine.TerrainModule.dll
+PC/Star Force_Data/Managed/UnityEngine.TerrainPhysicsModule.dll
+PC/Star Force_Data/Managed/UnityEngine.TextCoreModule.dll
+PC/Star Force_Data/Managed/UnityEngine.TextRenderingModule.dll
+PC/Star Force_Data/Managed/UnityEngine.TilemapModule.dll
+PC/Star Force_Data/Managed/UnityEngine.TLSModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UI.dll
+PC/Star Force_Data/Managed/UnityEngine.UIElementsModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UIModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UmbraModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UNETModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UnityAnalyticsModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UnityConnectModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UnityTestProtocolModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UnityWebRequestAssetBundleModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UnityWebRequestAudioModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UnityWebRequestModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UnityWebRequestTextureModule.dll
+PC/Star Force_Data/Managed/UnityEngine.UnityWebRequestWWWModule.dll
+PC/Star Force_Data/Managed/UnityEngine.VehiclesModule.dll
+PC/Star Force_Data/Managed/UnityEngine.VFXModule.dll
+PC/Star Force_Data/Managed/UnityEngine.VideoModule.dll
+PC/Star Force_Data/Managed/UnityEngine.VRModule.dll
+PC/Star Force_Data/Managed/UnityEngine.WindModule.dll
+PC/Star Force_Data/Managed/UnityEngine.XRModule.dll
+PC/Star Force_Data/Managed/UnityGameFramework.Runtime.dll
+PC/Star Force_Data/Resources/unity default resources
+PC/Star Force_Data/Resources/unity_builtin_extra
