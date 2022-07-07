@@ -239,7 +239,10 @@ namespace UnityGameFramework.Runtime
 
         private void Update()
         {
-            m_FpsCounter.Update(Time.deltaTime, Time.unscaledDeltaTime);
+            if (m_FpsCounter != null)
+            {
+                m_FpsCounter.Update(Time.deltaTime, Time.unscaledDeltaTime);
+            }
         }
 
         private void OnGUI()

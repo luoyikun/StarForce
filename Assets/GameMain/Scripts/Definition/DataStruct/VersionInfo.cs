@@ -16,14 +16,14 @@ namespace StarForce
             set;
         }
 
-        // 最新的游戏版本号
+        // 最新的游戏版本号     0.1.0
         public string LatestGameVersion
         {
             get;
             set;
         }
 
-        // 最新的游戏内部版本号
+        // 最新的游戏内部版本号   (0),与最新游戏版本号一起
         public int InternalGameVersion
         {
             get;

@@ -10,14 +10,14 @@ using System.Collections.Generic;
 namespace GameFramework
 {
     /// <summary>
-    /// 任务池。
+    /// 任务池。也是引用池的一种体现。WebRequest(网络请求), Download(下载), LoadResource(加载资源)时使用。
     /// </summary>
     /// <typeparam name="T">任务类型。</typeparam>
     internal sealed class TaskPool<T> where T : TaskBase
     {
-        private readonly Stack<ITaskAgent<T>> m_FreeAgents;
-        private readonly GameFrameworkLinkedList<ITaskAgent<T>> m_WorkingAgents;
-        private readonly GameFrameworkLinkedList<T> m_WaitingTasks;
+        private readonly Stack<ITaskAgent<T>> m_FreeAgents;  //通过栈维护所有空闲代理， 这个代理就是任务的具体实现过程，在框架中很多地方都使用了这种接口方式，具有高度的扩展性。
+        private readonly GameFrameworkLinkedList<ITaskAgent<T>> m_WorkingAgents;//通过一个链表维护所有的工作代理
+        private readonly GameFrameworkLinkedList<T> m_WaitingTasks;//通过一个链表维护所有的等待任务
         private bool m_Paused;
 
         /// <summary>
@@ -256,6 +256,7 @@ namespace GameFramework
         /// <param name="task">要增加的任务。</param>
         public void AddTask(T task)
         {
+            
             LinkedListNode<T> current = m_WaitingTasks.Last;
             while (current != null)
             {
@@ -275,6 +276,8 @@ namespace GameFramework
             {
                 m_WaitingTasks.AddFirst(task);
             }
+
+            GameFrameworkLog.Info("增加任务：{0}到m_WaitingTasks.count = {1}", task, m_WaitingTasks.Count);
         }
 
         /// <summary>
@@ -388,8 +391,10 @@ namespace GameFramework
             return count;
         }
 
+        //执行运行中任务。把全部运行完的working移入free
         private void ProcessRunningTasks(float elapseSeconds, float realElapseSeconds)
         {
+            //工作中的任务，遍历全部，完成了从working中取出，移入free
             LinkedListNode<ITaskAgent<T>> current = m_WorkingAgents.First;
             while (current != null)
             {
@@ -401,6 +406,7 @@ namespace GameFramework
                     continue;
                 }
 
+                //运行完了，working 移入 free
                 LinkedListNode<ITaskAgent<T>> next = current.Next;
                 current.Value.Reset();
                 m_FreeAgents.Push(current.Value);
@@ -410,18 +416,22 @@ namespace GameFramework
             }
         }
 
+        //等待处理的任务，把所有任务，从free中分配working 代理
         private void ProcessWaitingTasks(float elapseSeconds, float realElapseSeconds)
         {
-            LinkedListNode<T> current = m_WaitingTasks.First;
-            while (current != null && FreeAgentCount > 0)
+            LinkedListNode<T> current = m_WaitingTasks.First; //等待任务第一个
+            while (current != null && FreeAgentCount > 0) //当前还有free代理，且会一直循环到wait末尾
             {
                 ITaskAgent<T> agent = m_FreeAgents.Pop();
-                LinkedListNode<ITaskAgent<T>> agentNode = m_WorkingAgents.AddLast(agent);
+                LinkedListNode<ITaskAgent<T>> agentNode = m_WorkingAgents.AddLast(agent);//加入到工作代理
                 T task = current.Value;
                 LinkedListNode<T> next = current.Next;
                 StartTaskStatus status = agent.Start(task);
+
+                //以下都对出错才处理
                 if (status == StartTaskStatus.Done || status == StartTaskStatus.HasToWait || status == StartTaskStatus.UnknownError)
                 {
+                    //当前任务状态为  可以立即做，  等待做，未知错误
                     agent.Reset();
                     m_FreeAgents.Push(agent);
                     m_WorkingAgents.Remove(agentNode);
@@ -429,6 +439,7 @@ namespace GameFramework
 
                 if (status == StartTaskStatus.Done || status == StartTaskStatus.CanResume || status == StartTaskStatus.UnknownError)
                 {
+                    //针对下载，运行正确只会返回CanResume
                     m_WaitingTasks.Remove(current);
                 }
 

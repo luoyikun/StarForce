@@ -37,7 +37,10 @@ namespace StarForce
 
             m_UpdateVersionComplete = false;
 
+        
+
             GameEntry.Resource.UpdateVersionList(procedureOwner.GetData<VarInt32>("VersionListLength"), procedureOwner.GetData<VarInt32>("VersionListHashCode"), procedureOwner.GetData<VarInt32>("VersionListCompressedLength"), procedureOwner.GetData<VarInt32>("VersionListCompressedHashCode"), m_UpdateVersionListCallbacks);
+
             procedureOwner.RemoveData("VersionListLength");
             procedureOwner.RemoveData("VersionListHashCode");
             procedureOwner.RemoveData("VersionListCompressedLength");

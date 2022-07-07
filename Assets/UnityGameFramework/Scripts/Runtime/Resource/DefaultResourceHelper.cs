@@ -110,6 +110,7 @@ namespace UnityGameFramework.Runtime
 
         private IEnumerator LoadBytesCo(string fileUri, LoadBytesCallbacks loadBytesCallbacks, object userData)
         {
+            Log.Info("LoadBytesCo {0}", fileUri);
             bool isError = false;
             byte[] bytes = null;
             string errorMessage = null;

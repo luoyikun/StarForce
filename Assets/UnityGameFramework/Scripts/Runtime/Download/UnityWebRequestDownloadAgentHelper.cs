@@ -100,6 +100,7 @@ namespace UnityGameFramework.Runtime
         /// <param name="userData">用户自定义数据。</param>
         public override void Download(string downloadUri, object userData)
         {
+            Log.Info("增加Download : "+ downloadUri);
             if (m_DownloadAgentHelperUpdateBytesEventHandler == null || m_DownloadAgentHelperUpdateLengthEventHandler == null || m_DownloadAgentHelperCompleteEventHandler == null || m_DownloadAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Download agent helper handler is invalid.");
@@ -148,6 +149,7 @@ namespace UnityGameFramework.Runtime
         /// <param name="userData">用户自定义数据。</param>
         public override void Download(string downloadUri, long fromPosition, long toPosition, object userData)
         {
+            Log.Info("下载地址：" + downloadUri + "--起始位置：" + fromPosition + "--结束位置：" + toPosition);
             if (m_DownloadAgentHelperUpdateBytesEventHandler == null || m_DownloadAgentHelperUpdateLengthEventHandler == null || m_DownloadAgentHelperCompleteEventHandler == null || m_DownloadAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Download agent helper handler is invalid.");
@@ -155,6 +157,7 @@ namespace UnityGameFramework.Runtime
             }
 
             m_UnityWebRequest = new UnityWebRequest(downloadUri);
+            //用于断点续传
             m_UnityWebRequest.SetRequestHeader("Range", Utility.Text.Format("bytes={0}-{1}", fromPosition, toPosition));
             m_UnityWebRequest.downloadHandler = new DownloadHandler(this);
 #if UNITY_2017_2_OR_NEWER
@@ -231,7 +234,7 @@ namespace UnityGameFramework.Runtime
 #else
             isError = m_UnityWebRequest.isError;
 #endif
-            if (isError)
+            if (isError) //网络问题直接抛出error
             {
                 DownloadAgentHelperErrorEventArgs downloadAgentHelperErrorEventArgs = DownloadAgentHelperErrorEventArgs.Create(m_UnityWebRequest.responseCode == RangeNotSatisfiableErrorCode, m_UnityWebRequest.error);
                 m_DownloadAgentHelperErrorEventHandler(this, downloadAgentHelperErrorEventArgs);

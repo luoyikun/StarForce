@@ -264,11 +264,13 @@ namespace GameFramework.Resource
 
                     if (m_ResourceName.Variant == null || m_ResourceName.Variant == currentVariant)
                     {
+                        //文件存在，在fs系统里，加载方式一致，长度一致，hash一致 
                         if (m_ReadOnlyInfo.Exist && m_ReadOnlyInfo.FileSystemName == m_VersionInfo.FileSystemName && m_ReadOnlyInfo.LoadType == m_VersionInfo.LoadType && m_ReadOnlyInfo.Length == m_VersionInfo.Length && m_ReadOnlyInfo.HashCode == m_VersionInfo.HashCode)
                         {
                             m_Status = CheckStatus.StorageInReadOnly;
                             m_NeedRemove = m_ReadWriteInfo.Exist;
                         }
+                        //文件存在，加载方式一致，长度一致，hash一致 
                         else if (m_ReadWriteInfo.Exist && m_ReadWriteInfo.LoadType == m_VersionInfo.LoadType && m_ReadWriteInfo.Length == m_VersionInfo.Length && m_ReadWriteInfo.HashCode == m_VersionInfo.HashCode)
                         {
                             bool differentFileSystem = m_ReadWriteInfo.FileSystemName != m_VersionInfo.FileSystemName;
@@ -278,6 +280,7 @@ namespace GameFramework.Resource
                         }
                         else
                         {
+                            //不符合上述任意一种为  要更新 的文件
                             m_Status = CheckStatus.Update;
                             m_NeedRemove = m_ReadWriteInfo.Exist;
                         }

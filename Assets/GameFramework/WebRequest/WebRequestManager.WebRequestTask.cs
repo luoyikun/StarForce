@@ -10,7 +10,7 @@ namespace GameFramework.WebRequest
     internal sealed partial class WebRequestManager : GameFrameworkModule, IWebRequestManager
     {
         /// <summary>
-        /// Web 请求任务。
+        /// Web 请求任务。例如：请求版本信息文件.txt内容
         /// </summary>
         private sealed class WebRequestTask : TaskBase
         {

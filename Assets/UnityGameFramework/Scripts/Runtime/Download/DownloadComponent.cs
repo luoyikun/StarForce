@@ -35,7 +35,7 @@ namespace UnityGameFramework.Runtime
         private DownloadAgentHelperBase m_CustomDownloadAgentHelper = null;
 
         [SerializeField]
-        private int m_DownloadAgentHelperCount = 3;
+        private int m_DownloadAgentHelperCount = 3; //同时能开辟的下载器
 
         [SerializeField]
         private float m_Timeout = 30f;

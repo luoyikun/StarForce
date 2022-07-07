@@ -568,6 +568,7 @@ namespace GameFramework.Fsm
         /// <param name="stateType">要切换到的有限状态机状态类型。</param>
         internal void ChangeState(Type stateType)
         {
+            
             if (m_CurrentState == null)
             {
                 throw new GameFrameworkException("Current state is invalid.");
@@ -578,6 +579,9 @@ namespace GameFramework.Fsm
             {
                 throw new GameFrameworkException(Utility.Text.Format("FSM '{0}' can not change state to '{1}' which is not exist.", new TypeNamePair(typeof(T), Name), stateType.FullName));
             }
+
+
+            GameFrameworkLog.Info("切换状态机：{0}-->{1}", m_CurrentState, state);
 
             m_CurrentState.OnLeave(this, false);
             m_CurrentStateTime = 0f;

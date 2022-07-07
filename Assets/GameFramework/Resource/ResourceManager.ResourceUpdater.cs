@@ -25,11 +25,11 @@ namespace GameFramework.Resource
 
             private readonly ResourceManager m_ResourceManager;
             private readonly Queue<ApplyInfo> m_ApplyWaitingInfo;
-            private readonly List<UpdateInfo> m_UpdateWaitingInfo;
+            private readonly List<UpdateInfo> m_UpdateWaitingInfo; //等待下载表，一般开始时会从候选表全塞入等待表
             private readonly HashSet<UpdateInfo> m_UpdateWaitingInfoWhilePlaying;
-            private readonly Dictionary<ResourceName, UpdateInfo> m_UpdateCandidateInfo;
+            private readonly Dictionary<ResourceName, UpdateInfo> m_UpdateCandidateInfo; // 待下载资源信息字典（更新候选），直到里面为0，全部下载完毕。在ProcedureCheckResources得到候选下载
             private readonly SortedDictionary<string, List<int>> m_CachedFileSystemsForGenerateReadWriteVersionList;
-            private readonly List<ResourceName> m_CachedResourceNames;
+            private readonly List<ResourceName> m_CachedResourceNames;   //缓存的资源组
             private readonly byte[] m_CachedHashBytes;
             private readonly byte[] m_CachedBytes;
             private IDownloadManager m_DownloadManager;
@@ -199,6 +199,7 @@ namespace GameFramework.Resource
             {
                 if (m_ApplyingResourcePackStream != null)
                 {
+                    GameFrameworkLog.Info("ApplyingResourcePackStream");
                     while (m_ApplyWaitingInfo.Count > 0)
                     {
                         ApplyInfo applyInfo = m_ApplyWaitingInfo.Dequeue();
@@ -226,9 +227,12 @@ namespace GameFramework.Resource
                     return;
                 }
 
-                if (m_UpdateWaitingInfo.Count > 0)
+                if (m_UpdateWaitingInfo.Count > 0) //一开始已经从下载候选里塞入，例如有19个待下载候选
                 {
+                    //第一次运行有3个下载代理空闲   0个待下载任务
                     int freeCount = m_DownloadManager.FreeAgentCount - m_DownloadManager.WaitingTaskCount;
+                    GameFrameworkLog.Info("空闲代理数量{0}--等待下载的任务{1}", m_DownloadManager.FreeAgentCount, m_DownloadManager.WaitingTaskCount);
+                    //等待任务会在 taskPool的update中压入  working代理
                     if (freeCount > 0)
                     {
                         for (int i = 0, count = 0; i < m_UpdateWaitingInfo.Count && count < freeCount; i++)
@@ -423,6 +427,7 @@ namespace GameFramework.Resource
 
                 if (string.IsNullOrEmpty(resourceGroup.Name))
                 {
+                    GameFrameworkLog.Info("UpdateResources: 候选表全加入到等待表");
                     foreach (KeyValuePair<ResourceName, UpdateInfo> updateInfo in m_UpdateCandidateInfo)
                     {
                         m_UpdateWaitingInfo.Add(updateInfo.Value);
@@ -430,6 +435,7 @@ namespace GameFramework.Resource
                 }
                 else
                 {
+                    GameFrameworkLog.Info("UpdateResources: 获取资源组");
                     resourceGroup.InternalGetResourceNames(m_CachedResourceNames);
                     foreach (ResourceName resourceName in m_CachedResourceNames)
                     {
@@ -669,7 +675,7 @@ namespace GameFramework.Resource
                 {
                     return false;
                 }
-
+                GameFrameworkLog.Info("下载资源{0}", updateInfo.ResourceName);
                 updateInfo.Downloading = true;
                 string resourceFullNameWithCrc32 = updateInfo.ResourceName.Variant != null ? Utility.Text.Format("{0}.{1}.{2:x8}.{3}", updateInfo.ResourceName.Name, updateInfo.ResourceName.Variant, updateInfo.HashCode, DefaultExtension) : Utility.Text.Format("{0}.{1:x8}.{2}", updateInfo.ResourceName.Name, updateInfo.HashCode, DefaultExtension);
                 m_DownloadManager.AddDownload(updateInfo.ResourcePath, Utility.Path.GetRemotePath(Path.Combine(m_ResourceManager.m_UpdatePrefixUri, resourceFullNameWithCrc32)), updateInfo);
@@ -933,6 +939,7 @@ namespace GameFramework.Resource
                         }
                     }
 
+                    GameFrameworkLog.Info("下载完成{0}", updateInfo.ResourceName);
                     m_UpdateCandidateInfo.Remove(updateInfo.ResourceName);
                     m_UpdateWaitingInfo.Remove(updateInfo);
                     m_UpdateWaitingInfoWhilePlaying.Remove(updateInfo);
@@ -959,6 +966,7 @@ namespace GameFramework.Resource
                         }
                     }
 
+                    //最后是否全部下载完成走的这里
                     if (m_UpdateCandidateInfo.Count <= 0 && ResourceUpdateAllComplete != null)
                     {
                         ResourceUpdateAllComplete();

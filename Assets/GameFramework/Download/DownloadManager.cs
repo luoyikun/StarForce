@@ -393,6 +393,7 @@ namespace GameFramework.Download
         /// <returns>新增下载任务的序列编号。</returns>
         public int AddDownload(string downloadPath, string downloadUri, string tag, int priority, object userData)
         {
+            GameFrameworkLog.Info("增加下载任务：保存地址：" + downloadPath + "源地址：" + downloadUri);
             if (string.IsNullOrEmpty(downloadPath))
             {
                 throw new GameFrameworkException("Download path is invalid.");
@@ -463,6 +464,11 @@ namespace GameFramework.Download
             }
         }
 
+        /// <summary>
+        /// download 监听到agent下载成功，发送DownlaodMgr.下载成功通知
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="length"></param>
         private void OnDownloadAgentSuccess(DownloadAgent sender, long length)
         {
             if (m_DownloadSuccessEventHandler != null)

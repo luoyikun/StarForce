@@ -26,12 +26,12 @@ namespace GameFramework.Resource
         private const int FileSystemMaxFileCount = 1024 * 16;
         private const int FileSystemMaxBlockCount = 1024 * 256;
 
-        private Dictionary<string, AssetInfo> m_AssetInfos;
-        private Dictionary<ResourceName, ResourceInfo> m_ResourceInfos;
+        private Dictionary<string, AssetInfo> m_AssetInfos; //用于描述 Unity 中的一个具体资产，如一个预制体、一个材质、一张图片等。
+        private Dictionary<ResourceName, ResourceInfo> m_ResourceInfos; //用于描述 Unity 中的一个 AssetBundle（一些 Asset 的集合），或者一个 Game Framework 定义下的二进制文件(策划表)
         private SortedDictionary<ResourceName, ReadWriteResourceInfo> m_ReadWriteResourceInfos;
         private readonly Dictionary<string, IFileSystem> m_ReadOnlyFileSystems;
         private readonly Dictionary<string, IFileSystem> m_ReadWriteFileSystems;
-        private readonly Dictionary<string, ResourceGroup> m_ResourceGroups;
+        private readonly Dictionary<string, ResourceGroup> m_ResourceGroups;//资源组用于将资源分类，是资源的一种特性标签，一个资源可以归属于多个资源组。通过资源组可以游戏中构造出类似于“插件”的更新机制，如高清材质包、游戏语音包等。
 
         private PackageVersionListSerializer m_PackageVersionListSerializer;
         private UpdatableVersionListSerializer m_UpdatableVersionListSerializer;
@@ -2557,6 +2557,7 @@ namespace GameFramework.Resource
 
         private void OnUpdaterResourceUpdateAllComplete()
         {
+            GameFrameworkLog.Info("全部资源更新完毕");
             m_ResourceUpdater.ResourceApplyStart -= OnUpdaterResourceApplyStart;
             m_ResourceUpdater.ResourceApplySuccess -= OnUpdaterResourceApplySuccess;
             m_ResourceUpdater.ResourceApplyFailure -= OnUpdaterResourceApplyFailure;

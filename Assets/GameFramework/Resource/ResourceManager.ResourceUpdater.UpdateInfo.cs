@@ -12,7 +12,7 @@ namespace GameFramework.Resource
         private sealed partial class ResourceUpdater
         {
             /// <summary>
-            /// 资源更新信息。
+            /// 资源更新信息。 根据ResourceCollection.xml表中字段FileSystem="GameData" ，解析是否使用文件系统,即零散ab系统化为文件系统
             /// </summary>
             private sealed class UpdateInfo
             {

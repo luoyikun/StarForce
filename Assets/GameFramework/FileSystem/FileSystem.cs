@@ -138,6 +138,7 @@ namespace GameFramework.FileSystem
         /// <returns>创建的文件系统。</returns>
         public static FileSystem Create(string fullPath, FileSystemAccess access, FileSystemStream stream, int maxFileCount, int maxBlockCount)
         {
+            GameFrameworkLog.Info("创建文件系统:{0}，最大文件数：{1}，最大块数据量{2}", fullPath, maxFileCount, maxBlockCount);
             if (maxFileCount <= 0)
             {
                 throw new GameFrameworkException("Max file count is invalid.");
@@ -180,6 +181,7 @@ namespace GameFramework.FileSystem
         /// <returns>加载的文件系统。</returns>
         public static FileSystem Load(string fullPath, FileSystemAccess access, FileSystemStream stream)
         {
+            GameFrameworkLog.Info("加载的文件系统{0}", fullPath);
             FileSystem fileSystem = new FileSystem(fullPath, access, stream);
 
             stream.Read(s_CachedBytes, 0, HeaderDataSize);

@@ -107,6 +107,7 @@ namespace GameFramework.Resource
 
             private CheckInfo GetOrAddCheckInfo(ResourceName resourceName)
             {
+                GameFrameworkLog.Info("设置或者得到检查信息:{0}", resourceName);
                 CheckInfo checkInfo = null;
                 if (m_CheckInfos.TryGetValue(resourceName, out checkInfo))
                 {
@@ -119,6 +120,7 @@ namespace GameFramework.Resource
                 return checkInfo;
             }
 
+            //得到各个文件的状态，移除，移动，更新。可以得到差异更新总量
             private void RefreshCheckInfoStatus()
             {
                 if (!m_UpdatableVersionListReady || !m_ReadOnlyVersionListReady || !m_ReadWriteVersionListReady)

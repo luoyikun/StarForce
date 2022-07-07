@@ -8,7 +8,7 @@
 namespace GameFramework
 {
     /// <summary>
-    /// 任务基类。
+    /// 任务基类。任务可以是下载任务，ui打开任务，资源加载
     /// </summary>
     internal abstract class TaskBase : IReference
     {
@@ -20,7 +20,7 @@ namespace GameFramework
         private int m_SerialId;
         private string m_Tag;
         private int m_Priority;
-        private object m_UserData;
+        private object m_UserData;//每个任务，会先把参数塞入
 
         private bool m_Done;
 
@@ -118,6 +118,9 @@ namespace GameFramework
             m_SerialId = serialId;
             m_Tag = tag;
             m_Priority = priority;
+            //string sUserData = Utility.Json.ToJson(userData);
+            GameFrameworkLog.Info("初始化任务：{0}", userData);
+            
             m_UserData = userData;
             m_Done = false;
         }

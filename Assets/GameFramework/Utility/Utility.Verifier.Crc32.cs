@@ -5,6 +5,9 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using System;
+using UnityEngine;
+
 namespace GameFramework
 {
     public static partial class Utility
@@ -48,6 +51,7 @@ namespace GameFramework
 
                 public uint HashFinal()
                 {
+                    Debug.Log("Hash:" + ~m_Hash);
                     return ~m_Hash;
                 }
 
