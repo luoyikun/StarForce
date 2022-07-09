@@ -15,8 +15,8 @@ namespace UnityGameFramework.Editor.ResourceTools
     /// </summary>
     public sealed class Resource
     {
-        private readonly List<Asset> m_Assets;
-        private readonly List<string> m_ResourceGroups;
+        public  List<Asset> m_Assets;
+        public  List<string> m_ResourceGroups;
 
         private Resource(string name, string variant, string fileSystem, LoadType loadType, bool packed, string[] resourceGroups)
         {
@@ -124,6 +124,7 @@ namespace UnityGameFramework.Editor.ResourceTools
 
         public void UnassignAsset(Asset asset)
         {
+            PublicTools.DebugObj(asset, "Bundle:" +Name +  ":取消asset");
             asset.Resource = null;
             m_Assets.Remove(asset);
             if (m_Assets.Count <= 0)

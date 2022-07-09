@@ -74,7 +74,7 @@ namespace GameFramework.Resource
             }
 
             /// <summary>
-            /// 检查版本资源列表。
+            /// 检查版本资源列表。读写目录下GameFrameworkVersion.dat
             /// </summary>
             /// <param name="latestInternalResourceVersion">最新的内部资源版本号。</param>
             /// <returns>检查版本资源列表结果。</returns>
@@ -85,8 +85,10 @@ namespace GameFramework.Resource
                     throw new GameFrameworkException("Read-write path is invalid.");
                 }
 
+
+                // "GameFrameworkVersion.dat" 读这个文件
                 string versionListFileName = Utility.Path.GetRegularPath(Path.Combine(m_ResourceManager.m_ReadWritePath, RemoteVersionListFileName));
-                if (!File.Exists(versionListFileName))
+                if (!File.Exists(versionListFileName)) //文件不存在强制更新
                 {
                     return CheckVersionListResult.NeedUpdate;
                 }
@@ -117,11 +119,14 @@ namespace GameFramework.Resource
                     }
                 }
 
+                //latestInternalResourceVersion 这个是从version.txt 中得到
+                GameFrameworkLog.Info("读写目录中GameFrameworkVersion.dat中资源号：{0}，远程version.txt资源号：{1}", internalResourceVersion, latestInternalResourceVersion);
                 if (internalResourceVersion != latestInternalResourceVersion)
                 {
                     return CheckVersionListResult.NeedUpdate;
                 }
 
+                //只能说明GameFrameworkVersion.dat是最新，并不能说明本地文件是最新
                 return CheckVersionListResult.Updated;
             }
 

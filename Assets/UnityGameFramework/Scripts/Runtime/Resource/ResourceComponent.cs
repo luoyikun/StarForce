@@ -26,7 +26,7 @@ namespace UnityGameFramework.Runtime
         private const int DefaultPriority = 0;
         private const int OneMegaBytes = 1024 * 1024;
 
-        private IResourceManager m_ResourceManager = null; //接口为mgr，为提供管理的通用方法接口
+        private IResourceManager m_ResourceManager = null; //接口为mgr，为提供管理的通用方法接口;分为编辑器模式，与非编辑器模式
         private EventComponent m_EventComponent = null;
         private bool m_EditorResourceMode = false;
         private bool m_ForceUnloadUnusedAssets = false;

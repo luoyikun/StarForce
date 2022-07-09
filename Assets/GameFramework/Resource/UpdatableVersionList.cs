@@ -24,8 +24,8 @@ namespace GameFramework.Resource
         private readonly string m_ApplicableGameVersion;
         private readonly int m_InternalResourceVersion;
         private readonly Asset[] m_Assets;
-        private readonly Resource[] m_Resources;
-        private readonly FileSystem[] m_FileSystems;
+        public Resource[] m_Resources;
+        public FileSystem[] m_FileSystems;
         private readonly ResourceGroup[] m_ResourceGroups;
 
         /// <summary>

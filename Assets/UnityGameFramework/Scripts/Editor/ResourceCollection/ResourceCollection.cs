@@ -26,9 +26,9 @@ namespace UnityGameFramework.Editor.ResourceTools
         private static readonly Regex ResourceNameRegex = new Regex(@"^([A-Za-z0-9\._-]+/)*[A-Za-z0-9\._-]+$");
         private static readonly Regex ResourceVariantRegex = new Regex(@"^[a-z0-9_-]+$");
 
-        private readonly string m_ConfigurationPath;
-        private readonly SortedDictionary<string, Resource> m_Resources;
-        private readonly SortedDictionary<string, Asset> m_Assets;
+        private readonly string m_ConfigurationPath;//ResourceCollection.xml 打包关系按照资源收集
+        private readonly SortedDictionary<string, Resource> m_Resources; //bundle概念
+        private readonly SortedDictionary<string, Asset> m_Assets;//asset
 
         public ResourceCollection()
         {
@@ -324,7 +324,8 @@ namespace UnityGameFramework.Editor.ResourceTools
 
             Resource resource = Resource.Create(name, variant, fileSystem, loadType, packed, resourceGroups);
             m_Resources.Add(resource.FullName.ToLowerInvariant(), resource);
-
+            string sRes = Newtonsoft.Json.JsonConvert.SerializeObject(resource);
+            Debug.Log("增加打包资源:" + sRes);
             return true;
         }
 
@@ -468,6 +469,13 @@ namespace UnityGameFramework.Editor.ResourceTools
             return m_Assets.ContainsKey(guid);
         }
 
+        /// <summary>
+        /// 打某个asset 塞入bundle中
+        /// </summary>
+        /// <param name="guid">asset gid</param>
+        /// <param name="name"></param>
+        /// <param name="variant"></param>
+        /// <returns></returns>
         public bool AssignAsset(string guid, string name, string variant)
         {
             if (string.IsNullOrEmpty(guid))
@@ -523,7 +531,7 @@ namespace UnityGameFramework.Editor.ResourceTools
                 asset = Asset.Create(guid);
                 m_Assets.Add(asset.Guid, asset);
             }
-
+            GameFramework.PublicTools.DebugObj(asset, "bundle:" + name + "中塞入asset");
             resource.AssignAsset(asset, isScene);
 
             return true;
@@ -539,10 +547,11 @@ namespace UnityGameFramework.Editor.ResourceTools
             Asset asset = GetAsset(guid);
             if (asset != null)
             {
+                PublicTools.DebugObj(asset, "原有的Bundle取消asset");
                 asset.Resource.UnassignAsset(asset);
                 m_Assets.Remove(asset.Guid);
             }
-
+            
             return true;
         }
 

@@ -15,7 +15,7 @@ namespace GameFramework.Resource
     internal sealed partial class ResourceManager : GameFrameworkModule, IResourceManager
     {
         /// <summary>
-        /// 资源检查器。
+        /// 资源检查器。通过对比3个文件GameFrameworkVersion.XXXX.dat ，只读下GameFreamworkList.dat ，读写下GameFreamworkList.dat。确定哪些资源应该下载
         /// </summary>
         private sealed partial class ResourceChecker
         {
@@ -80,8 +80,11 @@ namespace GameFramework.Resource
 
                 m_CurrentVariant = currentVariant;
                 m_IgnoreOtherVariant = ignoreOtherVariant;
+                //读写中GameFrameworkVersion.dat
                 m_ResourceManager.m_ResourceHelper.LoadBytes(Utility.Path.GetRemotePath(Path.Combine(m_ResourceManager.m_ReadWritePath, RemoteVersionListFileName)), new LoadBytesCallbacks(OnLoadUpdatableVersionListSuccess, OnLoadUpdatableVersionListFailure), null);
+                //只读中GameFrameworkList.dat，为pack资源，随app发布的
                 m_ResourceManager.m_ResourceHelper.LoadBytes(Utility.Path.GetRemotePath(Path.Combine(m_ResourceManager.m_ReadOnlyPath, LocalVersionListFileName)), new LoadBytesCallbacks(OnLoadReadOnlyVersionListSuccess, OnLoadReadOnlyVersionListFailure), null);
+                //读写中"GameFrameworkList.dat"，为每次更新完后更新当前目录的资源
                 m_ResourceManager.m_ResourceHelper.LoadBytes(Utility.Path.GetRemotePath(Path.Combine(m_ResourceManager.m_ReadWritePath, LocalVersionListFileName)), new LoadBytesCallbacks(OnLoadReadWriteVersionListSuccess, OnLoadReadWriteVersionListFailure), null);
             }
 
@@ -107,7 +110,7 @@ namespace GameFramework.Resource
 
             private CheckInfo GetOrAddCheckInfo(ResourceName resourceName)
             {
-                GameFrameworkLog.Info("设置或者得到检查信息:{0}", resourceName);
+                GameFrameworkLog.Info("设置或者得到检查信息:{0}", resourceName.Name);
                 CheckInfo checkInfo = null;
                 if (m_CheckInfos.TryGetValue(resourceName, out checkInfo))
                 {
@@ -271,6 +274,8 @@ namespace GameFramework.Resource
                         throw new GameFrameworkException("Deserialize updatable version list failure.");
                     }
 
+                    PublicTools.DebugObj2(versionList, "读取下载到可读写：GameFrameworkVersion.dat", "d:/GameFrameworkVersion.txt");
+
                     UpdatableVersionList.Asset[] assets = versionList.GetAssets();
                     UpdatableVersionList.Resource[] resources = versionList.GetResources();
                     UpdatableVersionList.FileSystem[] fileSystems = versionList.GetFileSystems();
@@ -383,7 +388,7 @@ namespace GameFramework.Resource
                     {
                         throw new GameFrameworkException("Deserialize read-only version list failure.");
                     }
-
+                    PublicTools.DebugObj(versionList, "读取只读中：GameFrameworkList.dat");
                     LocalVersionList.Resource[] resources = versionList.GetResources();
                     LocalVersionList.FileSystem[] fileSystems = versionList.GetFileSystems();
 
@@ -452,6 +457,7 @@ namespace GameFramework.Resource
                         throw new GameFrameworkException("Deserialize read-write version list failure.");
                     }
 
+                    PublicTools.DebugObj(versionList, "读取可读写：GameFrameworkList.dat");
                     LocalVersionList.Resource[] resources = versionList.GetResources();
                     LocalVersionList.FileSystem[] fileSystems = versionList.GetFileSystems();
 

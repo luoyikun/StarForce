@@ -128,6 +128,7 @@ namespace StarForce
         public static int? OpenUIForm(this UIComponent uiComponent, int uiFormId, object userData = null)
         {
             IDataTable<DRUIForm> dtUIForm = GameEntry.DataTable.GetDataTable<DRUIForm>();
+            //通过id可以从表里取出一行数据
             DRUIForm drUIForm = dtUIForm.GetDataRow(uiFormId);
             if (drUIForm == null)
             {

@@ -17,7 +17,7 @@ namespace GameFramework.Scene
     internal sealed class SceneManager : GameFrameworkModule, ISceneManager
     {
         private readonly List<string> m_LoadedSceneAssetNames;
-        private readonly List<string> m_LoadingSceneAssetNames;
+        private readonly List<string> m_LoadingSceneAssetNames;//正在加载的场景
         private readonly List<string> m_UnloadingSceneAssetNames;
         private readonly LoadSceneCallbacks m_LoadSceneCallbacks;
         private readonly UnloadSceneCallbacks m_UnloadSceneCallbacks;

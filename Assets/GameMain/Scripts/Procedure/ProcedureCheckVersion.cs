@@ -133,6 +133,8 @@ namespace StarForce
             GameEntry.Resource.UpdatePrefixUri = Utility.Path.GetRegularPath(m_VersionInfo.UpdatePrefixUri);
 
             m_CheckVersionComplete = true;
+            //这里是否需要更新，是用读写中GameFrameworkVersion.dat 资源号与version.txt 中资源号对比。
+            //因为每次打包都是自增1的，所以
             m_NeedUpdateVersion = GameEntry.Resource.CheckVersionList(m_VersionInfo.InternalResourceVersion) == CheckVersionListResult.NeedUpdate;
         }
 

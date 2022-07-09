@@ -49,6 +49,7 @@ namespace GameFramework.Resource
             /// </summary>
             public void InitResources(string currentVariant)
             {
+                GameFrameworkLog.Info("初始化资源,变种名{0}", currentVariant);
                 m_CurrentVariant = currentVariant;
 
                 if (m_ResourceManager.m_ResourceHelper == null)
@@ -61,6 +62,8 @@ namespace GameFramework.Resource
                     throw new GameFrameworkException("Read-only path is invalid.");
                 }
 
+                string sLoadFile = Utility.Path.GetRemotePath(Path.Combine(m_ResourceManager.m_ReadOnlyPath, RemoteVersionListFileName));
+                GameFrameworkLog.Info("初始化资源读取文件{0}", sLoadFile);
                 m_ResourceManager.m_ResourceHelper.LoadBytes(Utility.Path.GetRemotePath(Path.Combine(m_ResourceManager.m_ReadOnlyPath, RemoteVersionListFileName)), new LoadBytesCallbacks(OnLoadPackageVersionListSuccess, OnLoadPackageVersionListFailure), null);
             }
 

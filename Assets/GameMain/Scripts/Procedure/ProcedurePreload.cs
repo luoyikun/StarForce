@@ -74,6 +74,7 @@ namespace StarForce
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
 
+            //每个预加载有个标志位，全部加载完成后，进入下一个流程
             foreach (KeyValuePair<string, bool> loadedFlag in m_LoadedFlag)
             {
                 if (!loadedFlag.Value)
@@ -81,26 +82,26 @@ namespace StarForce
                     return;
                 }
             }
-
+            //设置跳转下一个场景的id
             procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Menu"));
             ChangeState<ProcedureChangeScene>(procedureOwner);
         }
 
         private void PreloadResources()
         {
-            // Preload configs
+            // Preload configs  应该是玩家游戏设置
             LoadConfig("DefaultConfig");
 
-            // Preload data tables
+            // Preload data tables 配置表
             foreach (string dataTableName in DataTableNames)
             {
                 LoadDataTable(dataTableName);
             }
 
-            // Preload dictionaries
+            // Preload dictionaries 本地化对应的字典
             LoadDictionary("Default");
 
-            // Preload fonts
+            // Preload fonts 字体
             LoadFont("MainFont");
         }
 

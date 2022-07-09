@@ -871,6 +871,7 @@ namespace GameFramework.Resource
                 throw new GameFrameworkException("You must set read-only path before add load resource agent helper.");
             }
 
+            GameFrameworkLog.Info("设置资源只读路径{0}", readOnlyPath);
             m_ReadOnlyPath = readOnlyPath;
         }
 
@@ -969,7 +970,7 @@ namespace GameFramework.Resource
             {
                 throw new GameFrameworkException("You can not set current variant at this time.");
             }
-
+            GameFrameworkLog.Info("设置变体名{0}", currentVariant);
             m_CurrentVariant = currentVariant;
         }
 

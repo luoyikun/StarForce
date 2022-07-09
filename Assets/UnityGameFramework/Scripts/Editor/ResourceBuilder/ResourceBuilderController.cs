@@ -21,8 +21,8 @@ namespace UnityGameFramework.Editor.ResourceTools
 {
     public sealed partial class ResourceBuilderController
     {
-        private const string RemoteVersionListFileName = "GameFrameworkVersion.dat";
-        private const string LocalVersionListFileName = "GameFrameworkList.dat";
+        private const string RemoteVersionListFileName = "GameFrameworkVersion.dat"; //资源版本信息文件 {"IsValid":true,"ApplicableGameVersion":"0.1.0","InternalResourceVersion":11} 
+        private const string LocalVersionListFileName = "GameFrameworkList.dat";//
         private const string DefaultExtension = "dat";
         private const string NoneOptionName = "<None>";
         private static readonly int AssetsStringLength = "Assets".Length;
@@ -222,6 +222,7 @@ namespace UnityGameFramework.Editor.ResourceTools
             set;
         }
 
+        //打包全部更新文件是否选中
         public bool OutputFullSelected
         {
             get;
@@ -1085,6 +1086,10 @@ namespace UnityGameFramework.Editor.ResourceTools
                     throw new GameFrameworkException("Serialize package version list failure.");
                 }
             }
+
+            string sVersionListPath = Utility.Path.GetRegularPath(Path.Combine(outputPackagePath, "GameFrameworkVersion.txt"));
+            string sJson = PublicTools.GetObj2Json(versionList);
+            PublicTools.SaveString(sVersionListPath, sJson);
         }
 
         private VersionListData ProcessUpdatableVersionList(string outputFullPath, Platform platform)
@@ -1182,6 +1187,11 @@ namespace UnityGameFramework.Editor.ResourceTools
                     throw new GameFrameworkException("Serialize read-only version list failure.");
                 }
             }
+            //打入的是packed文件夹下，为随包安装差异下载资源
+            string sVersionListPath = Utility.Path.GetRegularPath(Path.Combine(outputPackedPath, "GameFrameworkList.txt"));
+            string sJson = PublicTools.GetObj2Json(versionList);
+            PublicTools.SaveString(sVersionListPath, sJson);
+
         }
 
         private int[] GetDependencyAssetIndexes(string assetName)
@@ -1383,6 +1393,7 @@ namespace UnityGameFramework.Editor.ResourceTools
 
             if (OutputFullSelected)
             {
+                //写入总版本文件GameFrameworkVersion.XXXX.dat
                 string fullNameWithCrc32AndExtension = variant != null ? Utility.Text.Format("{0}.{1}.{2:x8}.{3}", name, variant, hashCode, DefaultExtension) : Utility.Text.Format("{0}.{1:x8}.{2}", name, hashCode, DefaultExtension);
                 string fullPath = Utility.Path.GetRegularPath(Path.Combine(outputFullPath, fullNameWithCrc32AndExtension));
                 string fullDirectoryName = Path.GetDirectoryName(fullPath);

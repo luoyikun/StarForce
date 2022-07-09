@@ -19,8 +19,8 @@ namespace GameFramework.Resource
         private static readonly FileSystem[] EmptyFileSystemArray = new FileSystem[] { };
 
         private readonly bool m_IsValid;
-        private readonly Resource[] m_Resources;
-        private readonly FileSystem[] m_FileSystems;
+        public Resource[] m_Resources;
+        public FileSystem[] m_FileSystems;
 
         /// <summary>
         /// 初始化本地版本资源列表的新实例。
