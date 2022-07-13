@@ -61,6 +61,7 @@ namespace GameFramework.Sound
                 PlaySoundInfo playSoundInfo = ReferencePool.Acquire<PlaySoundInfo>();
                 playSoundInfo.m_SerialId = serialId;
                 playSoundInfo.m_SoundGroup = soundGroup;
+
                 playSoundInfo.m_PlaySoundParams = playSoundParams;
                 playSoundInfo.m_UserData = userData;
                 return playSoundInfo;

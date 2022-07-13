@@ -21,9 +21,9 @@ namespace GameFramework.Resource
             /// </summary>
             private sealed partial class LoadResourceAgent : ITaskAgent<LoadResourceTaskBase>
             {
-                private static readonly Dictionary<string, string> s_CachedResourceNames = new Dictionary<string, string>(StringComparer.Ordinal);
-                private static readonly HashSet<string> s_LoadingAssetNames = new HashSet<string>(StringComparer.Ordinal);
-                private static readonly HashSet<string> s_LoadingResourceNames = new HashSet<string>(StringComparer.Ordinal);
+                private static readonly Dictionary<string, string> s_CachedResourceNames = new Dictionary<string, string>(StringComparer.Ordinal); //资源名，资源全路径？好像没作用
+                private static readonly HashSet<string> s_LoadingAssetNames = new HashSet<string>(StringComparer.Ordinal); //正在加载中的asset，防止重复开启加载
+                private static readonly HashSet<string> s_LoadingResourceNames = new HashSet<string>(StringComparer.Ordinal);//正在加载中的resource，即ab
 
                 private readonly ILoadResourceAgentHelper m_Helper;
                 private readonly IResourceHelper m_ResourceHelper;
@@ -65,6 +65,7 @@ namespace GameFramework.Resource
                     }
 
                     m_Helper = loadResourceAgentHelper;
+                    GameFrameworkLog.Info("加载资源代理辅助器{0}", m_Helper.GetType()); //UnityGameFramework.Runtime.DefaultLoadResourceAgentHelper
                     m_ResourceHelper = resourceHelper;
                     m_ResourceLoader = resourceLoader;
                     m_ReadOnlyPath = readOnlyPath;
@@ -136,7 +137,7 @@ namespace GameFramework.Resource
                 }
 
                 /// <summary>
-                /// 开始处理加载资源任务。
+                /// 开始处理加载资源任务。 在taskPool.update中把空闲代理分配给到工作代理中
                 /// </summary>
                 /// <param name="task">要处理的加载资源任务。</param>
                 /// <returns>开始处理任务的状态。</returns>
@@ -150,21 +151,28 @@ namespace GameFramework.Resource
                     m_Task = task;
                     m_Task.StartTime = DateTime.UtcNow;
                     ResourceInfo resourceInfo = m_Task.ResourceInfo;
-
+                    //资源信息是ab信息，文件大小，加载方式
                     if (!resourceInfo.Ready)
                     {
+                        GameFrameworkLog.Info("资源信息未准备好");
                         m_Task.StartTime = default(DateTime);
                         return StartTaskStatus.HasToWait;
                     }
-
+                    
+                    //资源正在加载中
                     if (IsAssetLoading(m_Task.AssetName))
                     {
+                        //针对同一时间开启加载同一个asset的任务
+                        GameFrameworkLog.Info("资源正在加载中{0}",m_Task.AssetName);
                         m_Task.StartTime = default(DateTime);
                         return StartTaskStatus.HasToWait;
                     }
 
+                    //任务不是场景，说明要实例化
                     if (!m_Task.IsScene)
                     {
+                        //从对象池里拿一个，已经可以从ab里实例出来asset，任务做完了。
+                        //是否是依赖的asset全部准备好了，才可以提取出一个
                         AssetObject assetObject = m_ResourceLoader.m_AssetPool.Spawn(m_Task.AssetName);
                         if (assetObject != null)
                         {
@@ -173,8 +181,10 @@ namespace GameFramework.Resource
                         }
                     }
 
+                    //遍历依赖
                     foreach (string dependencyAssetName in m_Task.GetDependencyAssetNames())
                     {
+                        //如果依赖asset不能spawn，接着等待
                         if (!m_ResourceLoader.m_AssetPool.CanSpawn(dependencyAssetName))
                         {
                             m_Task.StartTime = default(DateTime);
@@ -182,6 +192,7 @@ namespace GameFramework.Resource
                         }
                     }
 
+                    //resource正在加载，等待，防止重复加载
                     string resourceName = resourceInfo.ResourceName.Name;
                     if (IsResourceLoading(resourceName))
                     {
@@ -191,6 +202,7 @@ namespace GameFramework.Resource
 
                     s_LoadingAssetNames.Add(m_Task.AssetName);
 
+                    //从resource对象池中取出，说明任务可以接着执行
                     ResourceObject resourceObject = m_ResourceLoader.m_ResourcePool.Spawn(resourceName);
                     if (resourceObject != null)
                     {
@@ -207,6 +219,7 @@ namespace GameFramework.Resource
                         s_CachedResourceNames.Add(resourceName, fullPath);
                     }
 
+                    //根据resource的加载方式
                     if (resourceInfo.LoadType == LoadType.LoadFromFile)
                     {
                         if (resourceInfo.UseFileSystem)
@@ -291,8 +304,14 @@ namespace GameFramework.Resource
                     m_Task.OnLoadAssetUpdate(this, e.Type, e.Progress);
                 }
 
+               /// <summary>
+               /// resource加载完成
+               /// </summary>
+               /// <param name="sender"></param>
+               /// <param name="e"></param>
                 private void OnLoadResourceAgentHelperReadFileComplete(object sender, LoadResourceAgentHelperReadFileCompleteEventArgs e)
                 {
+                    GameFrameworkLog.Info("resource加载完成{0}", m_Task.ResourceInfo.ResourceName.Name);
                     ResourceObject resourceObject = ResourceObject.Create(m_Task.ResourceInfo.ResourceName.Name, e.Resource, m_ResourceHelper, m_ResourceLoader);
                     m_ResourceLoader.m_ResourcePool.Register(resourceObject, true);
                     s_LoadingResourceNames.Remove(m_Task.ResourceInfo.ResourceName.Name);
@@ -319,10 +338,16 @@ namespace GameFramework.Resource
                     OnResourceObjectReady(resourceObject);
                 }
 
+                /// <summary>
+                /// asset加载完成
+                /// </summary>
+                /// <param name="sender"></param>
+                /// <param name="e"></param>
                 private void OnLoadResourceAgentHelperLoadComplete(object sender, LoadResourceAgentHelperLoadCompleteEventArgs e)
                 {
+                    GameFrameworkLog.Info("asset加载完成{0}", m_Task.AssetName);
                     AssetObject assetObject = null;
-                    if (m_Task.IsScene)
+                    if (m_Task.IsScene) //如果是场景
                     {
                         assetObject = m_ResourceLoader.m_AssetPool.Spawn(m_Task.AssetName);
                     }
@@ -338,7 +363,7 @@ namespace GameFramework.Resource
                             object dependencyResource = null;
                             if (m_ResourceLoader.m_AssetToResourceMap.TryGetValue(dependencyAsset, out dependencyResource))
                             {
-                                m_Task.ResourceObject.AddDependencyResource(dependencyResource);
+                                m_Task.ResourceObject.AddDependencyResource(dependencyResource); //所有依赖这个asset的resource引用+1
                             }
                             else
                             {

@@ -67,6 +67,10 @@ namespace GameFramework.Resource
                     m_ResourceLoader = null;
                 }
 
+                /// <summary>
+                /// 所有引用这个asset 的resource引用+1。。例如a.asset 不是b.ab里的，但是a依赖b中的c.asset ,所以在加载a时，b的引用+1
+                /// </summary>
+                /// <param name="dependencyResource"></param>
                 public void AddDependencyResource(object dependencyResource)
                 {
                     if (Target == dependencyResource)

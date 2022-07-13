@@ -14,7 +14,7 @@ using System.Collections.Generic;
 namespace GameFramework.Resource
 {
     /// <summary>
-    /// 资源管理器接口。
+    /// 资源管理器接口。是资源管理器接口，缓存资源组和已经加载过的资源。可以获取资源的版本编号和相关的路径地址，还有一些版本更新和资源加载的函数等等。  
     /// </summary>
     public interface IResourceManager
     {

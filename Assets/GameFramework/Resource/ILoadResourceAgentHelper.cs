@@ -12,6 +12,14 @@ namespace GameFramework.Resource
 {
     /// <summary>
     /// 加载资源代理辅助器接口。
+    /// 加载资源会伴随六大事件
+    /// 异步加载资源更新事件，
+    /// 异步读取资源文件完成事件，
+    /// 异步读取资源二进制流完成事件，
+    /// 异步将资源二进制流转换为加载对象完成事件，
+    /// 异步加载资源完成事件，
+    /// 错误事件
+    /// 资源的文件和二进制异步加载还有重置辅助器的函数。是实际加载资源的接口，加载完成以后会缓存到ResourceManager下ResourceLoader的IObjectPool。
     /// </summary>
     public interface ILoadResourceAgentHelper
     {

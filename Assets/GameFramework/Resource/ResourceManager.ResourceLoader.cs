@@ -24,14 +24,14 @@ namespace GameFramework.Resource
 
             private readonly ResourceManager m_ResourceManager;
             private readonly TaskPool<LoadResourceTaskBase> m_TaskPool;
-            private readonly Dictionary<object, int> m_AssetDependencyCount;
-            private readonly Dictionary<object, int> m_ResourceDependencyCount;
-            private readonly Dictionary<object, object> m_AssetToResourceMap;
-            private readonly Dictionary<string, object> m_SceneToAssetMap;
+            private readonly Dictionary<object, int> m_AssetDependencyCount; //asset引用计数
+            private readonly Dictionary<object, int> m_ResourceDependencyCount; //resource引用计数
+            private readonly Dictionary<object, object> m_AssetToResourceMap;//通过
+            private readonly Dictionary<string, object> m_SceneToAssetMap; //通过string，找到加载到内存中的asset场景资源
             private readonly LoadBytesCallbacks m_LoadBytesCallbacks;
             private readonly byte[] m_CachedHashBytes;
-            private IObjectPool<AssetObject> m_AssetPool;
-            private IObjectPool<ResourceObject> m_ResourcePool;
+            private IObjectPool<AssetObject> m_AssetPool; //缓存的asset对象池，如果找到就不需要加载
+            private IObjectPool<ResourceObject> m_ResourcePool;//缓存的resource对象池，如果找到就不需要加载
 
             /// <summary>
             /// 初始化加载资源器的新实例。
@@ -305,8 +305,9 @@ namespace GameFramework.Resource
             /// <param name="userData">用户自定义数据。</param>
             public void LoadAsset(string assetName, Type assetType, int priority, LoadAssetCallbacks loadAssetCallbacks, object userData)
             {
+                //
                 ResourceInfo resourceInfo = null;
-                string[] dependencyAssetNames = null;
+                string[] dependencyAssetNames = null; //asset依赖的asset列表
                 if (!CheckAsset(assetName, out resourceInfo, out dependencyAssetNames))
                 {
                     string errorMessage = Utility.Text.Format("Can not load asset '{0}'.", assetName);
@@ -803,6 +804,14 @@ namespace GameFramework.Resource
                 m_TaskPool.GetAllTaskInfos(results);
             }
 
+            /// <summary>
+            /// 加载某个asset的依赖项，可能依赖项还有依赖项
+            /// </summary>
+            /// <param name="assetName"></param>
+            /// <param name="priority"></param>
+            /// <param name="mainTask"></param>
+            /// <param name="userData"></param>
+            /// <returns></returns>
             private bool LoadDependencyAsset(string assetName, int priority, LoadResourceTaskBase mainTask, object userData)
             {
                 if (mainTask == null)
@@ -825,7 +834,7 @@ namespace GameFramework.Resource
                 LoadDependencyAssetTask dependencyTask = LoadDependencyAssetTask.Create(assetName, priority, resourceInfo, dependencyAssetNames, mainTask, userData);
                 foreach (string dependencyAssetName in dependencyAssetNames)
                 {
-                    if (!LoadDependencyAsset(dependencyAssetName, priority, dependencyTask, userData))
+                    if (!LoadDependencyAsset(dependencyAssetName, priority, dependencyTask, userData)) //递归调用，加载依赖项，如果有循环依赖如何避免，a引用b，b引用a，因为加载中，asset，resource都有缓存，不会重复创建任务
                     {
                         return false;
                     }
@@ -879,6 +888,7 @@ namespace GameFramework.Resource
                 }
 
                 dependencyAssetNames = assetInfo.GetDependencyAssetNames();
+                GameFrameworkLog.Info("检查资源asset，bundle关系{0},{1}", assetName, resourceInfo.ResourceName.Name);
                 return m_ResourceManager.m_ResourceMode == ResourceMode.UpdatableWhilePlaying ? true : resourceInfo.Ready;
             }
 

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 namespace GameFramework.Resource
 {
     /// <summary>
-    /// 资源组接口。
+    /// 资源组接口。可以获取资源组的参数的一些API，资源为什么要分组管理呢？比如某个模块的资源更新或者其他的，整体管理可以更加方便等等。  
     /// </summary>
     public interface IResourceGroup
     {

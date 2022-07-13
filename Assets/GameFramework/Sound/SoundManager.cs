@@ -436,6 +436,7 @@ namespace GameFramework.Sound
         /// <returns>声音的序列编号。</returns>
         public int PlaySound(string soundAssetName, string soundGroupName, int priority, PlaySoundParams playSoundParams, object userData)
         {
+            GameFrameworkLog.Info("播放声音{0},{1}", soundAssetName, soundGroupName);
             if (m_ResourceManager == null)
             {
                 throw new GameFrameworkException("You must set resource manager first.");

@@ -8,12 +8,12 @@
 namespace GameFramework.Resource
 {
     /// <summary>
-    /// 资源辅助器接口。
+    /// 资源辅助器接口。从指定文件路径读取数据流，卸载场景，释放资源。  
     /// </summary>
     public interface IResourceHelper
     {
         /// <summary>
-        /// 直接从指定文件路径加载数据流。
+        /// 直接从指定文件路径加载数据流。 例如加载更新列表文件
         /// </summary>
         /// <param name="fileUri">文件路径。</param>
         /// <param name="loadBytesCallbacks">加载数据流回调函数集。</param>

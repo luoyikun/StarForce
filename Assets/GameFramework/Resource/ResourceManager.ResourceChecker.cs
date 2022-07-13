@@ -123,7 +123,7 @@ namespace GameFramework.Resource
                 return checkInfo;
             }
 
-            //得到各个文件的状态，移除，移动，更新。可以得到差异更新总量
+            //得到各个文件的状态，移除，移动，更新。可以得到差异更新总量。三个文件都比对好了之后
             private void RefreshCheckInfoStatus()
             {
                 if (!m_UpdatableVersionListReady || !m_ReadOnlyVersionListReady || !m_ReadWriteVersionListReady)
@@ -276,6 +276,8 @@ namespace GameFramework.Resource
 
                     PublicTools.DebugObj2(versionList, "读取下载到可读写：GameFrameworkVersion.dat", "d:/GameFrameworkVersion.txt");
 
+                    //把GameFrameworkVersion.dat 文件中的 bundle ，asset ，asset的依赖项的关系，从文件中int[]变为string[],保存起来
+                    //如何解决资源冗余，循环引用
                     UpdatableVersionList.Asset[] assets = versionList.GetAssets();
                     UpdatableVersionList.Resource[] resources = versionList.GetResources();
                     UpdatableVersionList.FileSystem[] fileSystems = versionList.GetFileSystems();
@@ -388,7 +390,7 @@ namespace GameFramework.Resource
                     {
                         throw new GameFrameworkException("Deserialize read-only version list failure.");
                     }
-                    PublicTools.DebugObj(versionList, "读取只读中：GameFrameworkList.dat");
+                    PublicTools.DebugObj2(versionList, "读取只读中：GameFrameworkList.dat", "D/GameFrameworkListReadOnly.txt");
                     LocalVersionList.Resource[] resources = versionList.GetResources();
                     LocalVersionList.FileSystem[] fileSystems = versionList.GetFileSystems();
 
@@ -457,7 +459,7 @@ namespace GameFramework.Resource
                         throw new GameFrameworkException("Deserialize read-write version list failure.");
                     }
 
-                    PublicTools.DebugObj(versionList, "读取可读写：GameFrameworkList.dat");
+                    PublicTools.DebugObj2(versionList, "读取可读写：GameFrameworkList.dat", "D:/GameFrameworkListReadWrite.txt");
                     LocalVersionList.Resource[] resources = versionList.GetResources();
                     LocalVersionList.FileSystem[] fileSystems = versionList.GetFileSystems();
 

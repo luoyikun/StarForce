@@ -97,7 +97,7 @@ namespace UnityGameFramework.Runtime
         private LoadResourceAgentHelperBase m_CustomLoadResourceAgentHelper = null;
 
         [SerializeField]
-        private int m_LoadResourceAgentHelperCount = 3;
+        private int m_LoadResourceAgentHelperCount = 3; //同时可用于加载资源的数量
 
         /// <summary>
         /// 获取资源只读路径。
@@ -666,6 +666,7 @@ namespace UnityGameFramework.Runtime
             }
 
             m_ResourceHelper = Helper.CreateHelper(m_ResourceHelperTypeName, m_CustomResourceHelper);
+            Log.Info("创建资源辅助器{0}", m_ResourceHelper);
             if (m_ResourceHelper == null)
             {
                 Log.Error("Can not create resource helper.");
@@ -1430,7 +1431,9 @@ namespace UnityGameFramework.Runtime
         /// <param name="index">加载资源代理辅助器索引。</param>
         private void AddLoadResourceAgentHelper(int index)
         {
+            
             LoadResourceAgentHelperBase loadResourceAgentHelper = Helper.CreateHelper(m_LoadResourceAgentHelperTypeName, m_CustomLoadResourceAgentHelper, index);
+            Log.Info("增加加载资源代理辅助{0}{1}", loadResourceAgentHelper, index);
             if (loadResourceAgentHelper == null)
             {
                 Log.Error("Can not create load resource agent helper.");

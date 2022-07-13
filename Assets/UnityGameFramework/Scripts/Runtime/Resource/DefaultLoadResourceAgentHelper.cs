@@ -19,7 +19,7 @@ using Utility = GameFramework.Utility;
 namespace UnityGameFramework.Runtime
 {
     /// <summary>
-    /// 默认加载资源代理辅助器。
+    /// 默认加载资源代理辅助器。继承Mono，会在场景中创建GameObject，在Update中轮询各个异步请求加载的情况
     /// </summary>
     public class DefaultLoadResourceAgentHelper : LoadResourceAgentHelperBase, IDisposable
     {
@@ -34,10 +34,10 @@ namespace UnityGameFramework.Runtime
 #else
         private WWW m_WWW = null;
 #endif
-        private AssetBundleCreateRequest m_FileAssetBundleCreateRequest = null;
+        private AssetBundleCreateRequest m_FileAssetBundleCreateRequest = null; //加载resource
         private AssetBundleCreateRequest m_BytesAssetBundleCreateRequest = null;
-        private AssetBundleRequest m_AssetBundleRequest = null;
-        private AsyncOperation m_AsyncOperation = null;
+        private AssetBundleRequest m_AssetBundleRequest = null;//加载asset
+        private AsyncOperation m_AsyncOperation = null; //异步加载场景
 
         private EventHandler<LoadResourceAgentHelperUpdateEventArgs> m_LoadResourceAgentHelperUpdateEventHandler = null;
         private EventHandler<LoadResourceAgentHelperReadFileCompleteEventArgs> m_LoadResourceAgentHelperReadFileCompleteEventHandler = null;
@@ -149,6 +149,8 @@ namespace UnityGameFramework.Runtime
             }
 
             m_FileFullPath = fullPath;
+            Log.Info("异步读取资源文件{0}", fullPath);
+            //加载的是ab
             m_FileAssetBundleCreateRequest = AssetBundle.LoadFromFileAsync(fullPath);
         }
 
@@ -165,7 +167,7 @@ namespace UnityGameFramework.Runtime
                 Log.Fatal("Load resource agent helper handler is invalid.");
                 return;
             }
-
+            Log.Info("从文件系统中读取文件{0}-->{1}", fileSystem, name);
             FileInfo fileInfo = fileSystem.GetFileInfo(name);
             m_FileFullPath = fileSystem.FullPath;
             m_FileName = name;
@@ -243,6 +245,7 @@ namespace UnityGameFramework.Runtime
         /// <param name="isScene">要加载的资源是否是场景。</param>
         public override void LoadAsset(object resource, string assetName, Type assetType, bool isScene)
         {
+            Log.Info("AB加载资源代理辅助器{0}里面{1}", resource, assetName);
             if (m_LoadResourceAgentHelperLoadCompleteEventHandler == null || m_LoadResourceAgentHelperUpdateEventHandler == null || m_LoadResourceAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Load resource agent helper handler is invalid.");
@@ -373,8 +376,10 @@ namespace UnityGameFramework.Runtime
 #else
             UpdateWWW();
 #endif
+            //加载目标resource
             UpdateFileAssetBundleCreateRequest();
             UpdateBytesAssetBundleCreateRequest();
+            //加载asset
             UpdateAssetBundleRequest();
             UpdateAsyncOperation();
         }
@@ -455,6 +460,9 @@ namespace UnityGameFramework.Runtime
         }
 #endif
 
+        /// <summary>
+        /// 加载资源代理辅助器，update中轮询
+        /// </summary>
         private void UpdateFileAssetBundleCreateRequest()
         {
             if (m_FileAssetBundleCreateRequest != null)
@@ -465,6 +473,7 @@ namespace UnityGameFramework.Runtime
                     if (assetBundle != null)
                     {
                         AssetBundleCreateRequest oldFileAssetBundleCreateRequest = m_FileAssetBundleCreateRequest;
+                        //加载完成抛出通知
                         LoadResourceAgentHelperReadFileCompleteEventArgs loadResourceAgentHelperReadFileCompleteEventArgs = LoadResourceAgentHelperReadFileCompleteEventArgs.Create(assetBundle);
                         m_LoadResourceAgentHelperReadFileCompleteEventHandler(this, loadResourceAgentHelperReadFileCompleteEventArgs);
                         ReferencePool.Release(loadResourceAgentHelperReadFileCompleteEventArgs);
@@ -535,6 +544,7 @@ namespace UnityGameFramework.Runtime
                 {
                     if (m_AssetBundleRequest.asset != null)
                     {
+                        //加载asset成功，抛出通知
                         LoadResourceAgentHelperLoadCompleteEventArgs loadResourceAgentHelperLoadCompleteEventArgs = LoadResourceAgentHelperLoadCompleteEventArgs.Create(m_AssetBundleRequest.asset);
                         m_LoadResourceAgentHelperLoadCompleteEventHandler(this, loadResourceAgentHelperLoadCompleteEventArgs);
                         ReferencePool.Release(loadResourceAgentHelperLoadCompleteEventArgs);

@@ -16,14 +16,14 @@ namespace GameFramework.Resource
         {
             private abstract class LoadResourceTaskBase : TaskBase
             {
-                private static int s_Serial = 0;
+                private static int s_Serial = 0; //加载任务，会永远自增
 
-                private string m_AssetName;
+                private string m_AssetName;  //asset名字，为工程中assets开始的路径"Assets/GameMain/UI/UIForms/DialogForm.prefab"
                 private Type m_AssetType;
                 private ResourceInfo m_ResourceInfo;
-                private string[] m_DependencyAssetNames;
-                private readonly List<object> m_DependencyAssets;
-                private ResourceObject m_ResourceObject;
+                private string[] m_DependencyAssetNames; // 依赖的资源名字
+                private readonly List<object> m_DependencyAssets; //这里传入object，是因为依赖的资源可能是 (UnityEngine.Material)，(UnityEngine.Texture2D) 多种不同类型
+                private ResourceObject m_ResourceObject; //resourceObject 在内存中
                 private DateTime m_StartTime;
                 private int m_TotalDependencyAssetCount;
 
@@ -139,6 +139,7 @@ namespace GameFramework.Resource
                     return m_DependencyAssets;
                 }
 
+                //从resource里加载目标asset
                 public void LoadMain(LoadResourceAgent agent, ResourceObject resourceObject)
                 {
                     m_ResourceObject = resourceObject;
@@ -157,8 +158,12 @@ namespace GameFramework.Resource
                 {
                 }
 
+                //加载完自己，也是一种依赖
                 public virtual void OnLoadDependencyAsset(LoadResourceAgent agent, string dependencyAssetName, object dependencyAsset)
                 {
+                    GameFrameworkLog.Info("依赖资源加载完后放入{0}-->{1}", dependencyAssetName, dependencyAsset);
+                    //依赖资源加载完后放入Assets/GameMain/Textures/part_star_dff.tif-->part_star_dff (UnityEngine.Texture2D)
+                    //依赖资源加载完后放入Assets/GameMain/Materials/part_star_mat.mat-->part_star_mat (UnityEngine.Material)
                     m_DependencyAssets.Add(dependencyAsset);
                 }
 
@@ -169,6 +174,8 @@ namespace GameFramework.Resource
                     m_AssetType = assetType;
                     m_ResourceInfo = resourceInfo;
                     m_DependencyAssetNames = dependencyAssetNames;
+                    string sDepend = PublicTools.GetObj2Json(dependencyAssetNames);
+                    GameFrameworkLog.Info("初始化加载任务{0}-->{1}", assetName, sDepend);
                 }
             }
         }

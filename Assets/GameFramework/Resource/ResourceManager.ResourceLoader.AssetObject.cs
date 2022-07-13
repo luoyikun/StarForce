@@ -15,7 +15,7 @@ namespace GameFramework.Resource
         private sealed partial class ResourceLoader
         {
             /// <summary>
-            /// 资源对象。
+            /// 资源对象。为内存中的一个asset 对象，非gameobject
             /// </summary>
             private sealed class AssetObject : ObjectBase
             {
@@ -42,6 +42,16 @@ namespace GameFramework.Resource
                     }
                 }
 
+                /// <summary>
+                /// 创建出assetobject时，记录引用+1，所有被依赖的asset+1
+                /// </summary>
+                /// <param name="name"></param>
+                /// <param name="target"></param>
+                /// <param name="dependencyAssets"></param>
+                /// <param name="resource"></param>
+                /// <param name="resourceHelper"></param>
+                /// <param name="resourceLoader"></param>
+                /// <returns></returns>
                 public static AssetObject Create(string name, object target, List<object> dependencyAssets, object resource, IResourceHelper resourceHelper, ResourceLoader resourceLoader)
                 {
                     if (dependencyAssets == null)
@@ -71,6 +81,7 @@ namespace GameFramework.Resource
                     assetObject.m_ResourceHelper = resourceHelper;
                     assetObject.m_ResourceLoader = resourceLoader;
 
+                    //所有依赖的asset 引用+1，有它自己+1吗
                     foreach (object dependencyAsset in dependencyAssets)
                     {
                         int referenceCount = 0;

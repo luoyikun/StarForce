@@ -401,12 +401,14 @@ namespace GameFramework
                 T task = current.Value.Task;
                 if (!task.Done)
                 {
+                    //如果当前任务状态为未完成状态时，任务执行
                     current.Value.Update(elapseSeconds, realElapseSeconds);
                     current = current.Next;
                     continue;
                 }
 
                 //运行完了，working 移入 free
+                //如果当前任务为完成状态，任务代理状态重置，此任务代理重新压入空闲代理栈，将此代理节点工作代理链表，任务引用归放入引用池。
                 LinkedListNode<ITaskAgent<T>> next = current.Next;
                 current.Value.Reset();
                 m_FreeAgents.Push(current.Value);
@@ -420,18 +422,19 @@ namespace GameFramework
         private void ProcessWaitingTasks(float elapseSeconds, float realElapseSeconds)
         {
             LinkedListNode<T> current = m_WaitingTasks.First; //等待任务第一个
+            //如果当前有空闲代理
             while (current != null && FreeAgentCount > 0) //当前还有free代理，且会一直循环到wait末尾
             {
                 ITaskAgent<T> agent = m_FreeAgents.Pop();
                 LinkedListNode<ITaskAgent<T>> agentNode = m_WorkingAgents.AddLast(agent);//加入到工作代理
                 T task = current.Value;
                 LinkedListNode<T> next = current.Next;
-                StartTaskStatus status = agent.Start(task);
+                StartTaskStatus status = agent.Start(task);//通过代理控制当前任务执行
 
                 //以下都对出错才处理
                 if (status == StartTaskStatus.Done || status == StartTaskStatus.HasToWait || status == StartTaskStatus.UnknownError)
                 {
-                    //当前任务状态为  可以立即做，  等待做，未知错误
+                    //当前任务必须等待，归还到空闲代理，工作代理中移除
                     agent.Reset();
                     m_FreeAgents.Push(agent);
                     m_WorkingAgents.Remove(agentNode);
@@ -439,7 +442,7 @@ namespace GameFramework
 
                 if (status == StartTaskStatus.Done || status == StartTaskStatus.CanResume || status == StartTaskStatus.UnknownError)
                 {
-                    //针对下载，运行正确只会返回CanResume
+                    //可以继续处理
                     m_WaitingTasks.Remove(current);
                 }
 

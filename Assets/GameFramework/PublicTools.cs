@@ -51,7 +51,7 @@ namespace GameFramework
             writer.Dispose();    //销毁写指针
         }
 
-        public static void DebugObj2<T>(T data, string pre,string path = "")
+        public static void DebugObj2<T>(T data, string pre = "",string path = "")
         {
             string sRes = Newtonsoft.Json.JsonConvert.SerializeObject(data, Newtonsoft.Json.Formatting.None, m_jsonsettings);
             Debug.Log(pre + "->" + sRes);

@@ -15,7 +15,7 @@ namespace GameFramework.Resource
         {
             private sealed class LoadAssetTask : LoadResourceTaskBase
             {
-                private LoadAssetCallbacks m_LoadAssetCallbacks;
+                private LoadAssetCallbacks m_LoadAssetCallbacks; //加载成功回调
 
                 public LoadAssetTask()
                 {
