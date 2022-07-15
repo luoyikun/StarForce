@@ -5,6 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFramework;
 using System.Runtime.InteropServices;
 
 namespace UnityGameFramework.Editor.ResourceTools
@@ -24,6 +25,7 @@ namespace UnityGameFramework.Editor.ResourceTools
             /// <param name="dependencyAssetName">被依赖的asset</param>
             public Stamp(string hostAssetName, string dependencyAssetName)
             {
+                GameFrameworkLog.Info("{0}印记{1}",hostAssetName,dependencyAssetName);
                 m_HostAssetName = hostAssetName;
                 m_DependencyAssetName = dependencyAssetName;
             }

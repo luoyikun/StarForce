@@ -333,7 +333,7 @@ namespace GameFramework.Resource
                 }
 
                 LoadAssetTask mainTask = LoadAssetTask.Create(assetName, assetType, priority, resourceInfo, dependencyAssetNames, loadAssetCallbacks, userData);
-                m_TaskPool.AddTask(mainTask);
+                
                 foreach (string dependencyAssetName in dependencyAssetNames)
                 {
                     if (!LoadDependencyAsset(dependencyAssetName, priority, mainTask, userData))
@@ -349,7 +349,7 @@ namespace GameFramework.Resource
                     }
                 }
 
-                
+                m_TaskPool.AddTask(mainTask);
 
                 if (!resourceInfo.Ready)
                 {
@@ -834,23 +834,23 @@ namespace GameFramework.Resource
                     return false;
                 }
 
-                List<LoadResourceTaskBase> listTask = new List<LoadResourceTaskBase>(8);
-                m_TaskPool.GetAllTasks(listTask);
-                bool isExist = false;
-                GameFrameworkLog.Info("所有任务数量{0}", listTask.Count);
-                for (int i = 0; i < listTask.Count; i++)
-                {
-                    if (listTask[i].AssetName == assetName)
-                    {
-                        GameFrameworkLog.Info("所有任务中存在{0}", assetName);
-                        isExist = true;
-                        return true;                   
-                    }
-                }
+                //List<LoadResourceTaskBase> listTask = new List<LoadResourceTaskBase>(8);
+                //m_TaskPool.GetAllTasks(listTask);
+                //bool isExist = false;
+                //GameFrameworkLog.Info("所有任务数量{0}", listTask.Count);
+                //for (int i = 0; i < listTask.Count; i++)
+                //{
+                //    if (listTask[i].AssetName == assetName)
+                //    {
+                //        GameFrameworkLog.Info("所有任务中存在{0}", assetName);
+                //        isExist = true;
+                //        return true;                   
+                //    }
+                //}
 
 
                 LoadDependencyAssetTask dependencyTask = LoadDependencyAssetTask.Create(assetName, priority, resourceInfo, dependencyAssetNames, mainTask, userData);
-                m_TaskPool.AddTask(dependencyTask);
+                
 
                 foreach (string dependencyAssetName in dependencyAssetNames)
                 {
@@ -860,7 +860,7 @@ namespace GameFramework.Resource
                     }
                 }
 
-                
+                m_TaskPool.AddTask(dependencyTask);
 
                 if (!resourceInfo.Ready)
                 {

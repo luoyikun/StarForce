@@ -113,7 +113,9 @@ namespace UnityGameFramework.Editor.ResourceTools
 
                 DependencyData dependencyData = new DependencyData();
                 AnalyzeAsset(assetName, assets[i], dependencyData, scriptAssetNames);
-                dependencyData.RefreshData();
+                dependencyData.RefreshData(); 
+                PublicTools.DebugObj(dependencyData, "增加一条依赖关系：" + assetName + "-->");
+                
                 m_DependencyDatas.Add(assetName, dependencyData);
             }
 
@@ -132,7 +134,10 @@ namespace UnityGameFramework.Editor.ResourceTools
 
         private void AnalyzeAsset(string assetName, Asset hostAsset, DependencyData dependencyData, HashSet<string> scriptAssetNames)
         {
+
             string[] dependencyAssetNames = AssetDatabase.GetDependencies(assetName, false);
+            string sDependency = PublicTools.GetObj2Json(dependencyAssetNames);
+            GameFrameworkLog.Info("分析依赖{0}-->{1}", assetName, sDependency);
             foreach (string dependencyAssetName in dependencyAssetNames)
             {
                 if (scriptAssetNames.Contains(dependencyAssetName))
@@ -169,6 +174,7 @@ namespace UnityGameFramework.Editor.ResourceTools
                 Asset asset = m_ResourceCollection.GetAsset(guid);
                 if (asset != null)
                 {
+                    GameFrameworkLog.Info("{0}增加依赖asset:{1}", hostAsset,asset.Resource.Name);
                     dependencyData.AddDependencyAsset(asset);
                 }
                 else

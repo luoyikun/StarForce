@@ -5,15 +5,16 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFramework;
 using System.Collections.Generic;
 
 namespace UnityGameFramework.Editor.ResourceTools
 {
     public sealed class DependencyData
     {
-        private List<Resource> m_DependencyResources;
-        private List<Asset> m_DependencyAssets;
-        private List<string> m_ScatteredDependencyAssetNames;
+        public List<Resource> m_DependencyResources;
+        public List<Asset> m_DependencyAssets;
+        public List<string> m_ScatteredDependencyAssetNames;
 
         public DependencyData()
         {
@@ -48,6 +49,7 @@ namespace UnityGameFramework.Editor.ResourceTools
 
         public void AddDependencyAsset(Asset asset)
         {
+            
             if (!m_DependencyResources.Contains(asset.Resource))
             {
                 m_DependencyResources.Add(asset.Resource);

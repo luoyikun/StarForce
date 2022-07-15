@@ -325,7 +325,7 @@ namespace UnityGameFramework.Editor.ResourceTools
             Resource resource = Resource.Create(name, variant, fileSystem, loadType, packed, resourceGroups);
             m_Resources.Add(resource.FullName.ToLowerInvariant(), resource);
             string sRes = Newtonsoft.Json.JsonConvert.SerializeObject(resource);
-            Debug.Log("增加打包资源:" + sRes);
+            Debug.Log("增加打包资源：" + name + "-->" + sRes);
             return true;
         }
 
