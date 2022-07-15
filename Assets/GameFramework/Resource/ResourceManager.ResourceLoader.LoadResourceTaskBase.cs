@@ -14,7 +14,7 @@ namespace GameFramework.Resource
     {
         private sealed partial class ResourceLoader
         {
-            private abstract class LoadResourceTaskBase : TaskBase
+            private abstract class LoadResourceTaskBase : TaskBase //派生出 主资源任务，依赖资源任务
             {
                 private static int s_Serial = 0; //加载任务，会永远自增
 
@@ -158,7 +158,7 @@ namespace GameFramework.Resource
                 {
                 }
 
-                //加载完自己，也是一种依赖
+                //加载完依赖放入
                 public virtual void OnLoadDependencyAsset(LoadResourceAgent agent, string dependencyAssetName, object dependencyAsset)
                 {
                     GameFrameworkLog.Info("依赖资源加载完后放入{0}-->{1}", dependencyAssetName, dependencyAsset);
@@ -176,6 +176,9 @@ namespace GameFramework.Resource
                     m_DependencyAssetNames = dependencyAssetNames;
                     string sDepend = PublicTools.GetObj2Json(dependencyAssetNames);
                     GameFrameworkLog.Info("初始化加载任务{0}-->{1}", assetName, sDepend);
+                    m_name = assetName;
+                    //初始化加载任务Assets / GameMain / UI / UIForms / DialogForm.prefab-- >["Assets/GameMain/UI/UISprites/Common/dialog-title-background.png", "Assets/GameMain/UI/UISprites/Common/button-outline.png", "Assets/GameMain/UI/UISprites/Common/dialog-background.png", "Assets/GameMain/UI/UISprites (at ?)/Common/background.png"]
+
                 }
             }
         }

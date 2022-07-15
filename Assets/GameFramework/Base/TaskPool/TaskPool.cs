@@ -226,6 +226,21 @@ namespace GameFramework
             return results;
         }
 
+        public void GetAllTasks(List<T> list)
+        {
+            list.Clear();
+            foreach (ITaskAgent<T> workingAgent in m_WorkingAgents)
+            {
+                T workingTask = workingAgent.Task;
+                list.Add(workingTask);
+            }
+
+            foreach (T waitingTask in m_WaitingTasks)
+            {
+                list.Add(waitingTask);
+            }
+        }
+
         /// <summary>
         /// 获取所有任务的信息。
         /// </summary>
@@ -277,6 +292,7 @@ namespace GameFramework
                 m_WaitingTasks.AddFirst(task);
             }
 
+            
             GameFrameworkLog.Info("增加任务：{0}到m_WaitingTasks.count = {1}", task, m_WaitingTasks.Count);
         }
 

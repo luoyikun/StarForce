@@ -86,6 +86,7 @@ namespace GameFramework.Resource
                     m_DependencyResources.Add(dependencyResource);
 
                     int referenceCount = 0;
+                    GameFrameworkLog.Info("Resource-->{0}引用+1", dependencyResource);
                     if (m_ResourceLoader.m_ResourceDependencyCount.TryGetValue(dependencyResource, out referenceCount))
                     {
                         m_ResourceLoader.m_ResourceDependencyCount[dependencyResource] = referenceCount + 1;
@@ -112,6 +113,7 @@ namespace GameFramework.Resource
                             if (m_ResourceLoader.m_ResourceDependencyCount.TryGetValue(dependencyResource, out referenceCount))
                             {
                                 m_ResourceLoader.m_ResourceDependencyCount[dependencyResource] = referenceCount - 1;
+                                //只会-1，不会对为 0 的Assetbundle进行卸载
                             }
                             else
                             {
@@ -121,7 +123,7 @@ namespace GameFramework.Resource
                     }
 
                     m_ResourceLoader.m_ResourceDependencyCount.Remove(Target);
-                    m_ResourceHelper.Release(Target);
+                    m_ResourceHelper.Release(Target); //AssetBundle.Unload(true) ,也可能是asset 执行释放，也可能是scene执行释放
                 }
             }
         }

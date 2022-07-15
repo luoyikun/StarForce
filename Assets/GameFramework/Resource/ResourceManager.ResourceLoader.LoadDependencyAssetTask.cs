@@ -13,7 +13,7 @@ namespace GameFramework.Resource
         {
             private sealed class LoadDependencyAssetTask : LoadResourceTaskBase
             {
-                private LoadResourceTaskBase m_MainTask;
+                private LoadResourceTaskBase m_MainTask; //主任务，是指被依赖的目标a。。例如要加载a，依赖c。a就是的主任务。。。可能a也是别的目标任务的依赖任务
 
                 public LoadDependencyAssetTask()
                 {
@@ -30,9 +30,10 @@ namespace GameFramework.Resource
 
                 public static LoadDependencyAssetTask Create(string assetName, int priority, ResourceInfo resourceInfo, string[] dependencyAssetNames, LoadResourceTaskBase mainTask, object userData)
                 {
+                    GameFrameworkLog.Info("创建依赖资源任务{0}", assetName);
                     LoadDependencyAssetTask loadDependencyAssetTask = ReferencePool.Acquire<LoadDependencyAssetTask>();
                     loadDependencyAssetTask.Initialize(assetName, null, priority, resourceInfo, dependencyAssetNames, userData);
-                    loadDependencyAssetTask.m_MainTask = mainTask;
+                    loadDependencyAssetTask.m_MainTask = mainTask; //这里是主任务，也可能 a依赖b，b依赖c  ，对c而言，b就是任务
                     loadDependencyAssetTask.m_MainTask.TotalDependencyAssetCount++;
                     return loadDependencyAssetTask;
                 }

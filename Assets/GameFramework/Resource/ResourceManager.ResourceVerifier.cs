@@ -141,6 +141,7 @@ namespace GameFramework.Resource
                 }
 
                 m_VerifyResourceLengthPerFrame = verifyResourceLengthPerFrame;
+                //读取文件
                 m_ResourceManager.m_ResourceHelper.LoadBytes(Utility.Path.GetRemotePath(Path.Combine(m_ResourceManager.m_ReadWritePath, LocalVersionListFileName)), new LoadBytesCallbacks(OnLoadReadWriteVersionListSuccess, OnLoadReadWriteVersionListFailure), null);
             }
 

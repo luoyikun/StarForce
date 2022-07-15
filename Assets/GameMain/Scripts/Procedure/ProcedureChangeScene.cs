@@ -93,6 +93,7 @@ namespace StarForce
             if (m_ChangeToMenu)
             {
                 ChangeState<ProcedureMenu>(procedureOwner);
+                //ChangeState<ProcedureTest>(procedureOwner);
             }
             else
             {

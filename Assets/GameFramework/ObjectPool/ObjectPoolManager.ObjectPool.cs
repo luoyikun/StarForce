@@ -18,7 +18,7 @@ namespace GameFramework.ObjectPool
         /// <typeparam name="T">对象类型。</typeparam>
         private sealed class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : ObjectBase
         {
-            private readonly GameFrameworkMultiDictionary<string, Object<T>> m_Objects;//一对多的对象池，例如value 为list<T>
+            private readonly GameFrameworkMultiDictionary<string, Object<T>> m_Objects;//一对多的对象池，key为名字，value 为list<T>
             private readonly Dictionary<object, Object<T>> m_ObjectMap;
             private readonly ReleaseObjectFilterCallback<T> m_DefaultReleaseObjectFilterCallback;
             private readonly List<T> m_CachedCanReleaseObjects;
@@ -137,6 +137,7 @@ namespace GameFramework.ObjectPool
                     }
 
                     m_Capacity = value;
+                    GameFramework.GameFrameworkLog.Info("设置对象池容量{0}-->{1}", Name,m_Capacity);
                     Release();
                 }
             }
@@ -306,6 +307,7 @@ namespace GameFramework.ObjectPool
                 if (internalObject != null)
                 {
                     internalObject.Unspawn();
+                    GameFrameworkLog.Info("Unspawn-->{0}-->获取对象池中对象的数量{1},对象池容量{2},生产数量{3}", internalObject.Name, Count, m_Capacity, internalObject.SpawnCount);
                     if (Count > m_Capacity && internalObject.SpawnCount <= 0)
                     {
                         Release();

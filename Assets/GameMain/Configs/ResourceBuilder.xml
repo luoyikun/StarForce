@@ -2,7 +2,7 @@
 <UnityGameFramework>
   <ResourceBuilder>
     <Settings>
-      <InternalResourceVersion>14</InternalResourceVersion>
+      <InternalResourceVersion>15</InternalResourceVersion>
       <Platforms>33</Platforms>
       <AssetBundleCompression>1</AssetBundleCompression>
       <CompressionHelperTypeName>UnityGameFramework.Runtime.DefaultCompressionHelper</CompressionHelperTypeName>
@@ -10,9 +10,9 @@
       <ForceRebuildAssetBundleSelected>False</ForceRebuildAssetBundleSelected>
       <BuildEventHandlerTypeName>StarForce.Editor.StarForceBuildEventHandler</BuildEventHandlerTypeName>
       <OutputDirectory>E:/GithubProjects/GameDemo/StarForce/BuildAB</OutputDirectory>
-      <OutputPackageSelected>False</OutputPackageSelected>
+      <OutputPackageSelected>True</OutputPackageSelected>
       <OutputFullSelected>True</OutputFullSelected>
-      <OutputPackedSelected>False</OutputPackedSelected>
+      <OutputPackedSelected>True</OutputPackedSelected>
     </Settings>
   </ResourceBuilder>
 </UnityGameFramework>

@@ -11,6 +11,7 @@ using UnityGameFramework.Runtime;
 
 namespace StarForce
 {
+    //实体扩展，用于创建，管理游戏各类型实体
     public static class EntityExtension
     {
         // 关于 EntityId 的约定：
@@ -80,6 +81,14 @@ namespace StarForce
             entityComponent.ShowEntity(typeof(Effect), "Effect", Constant.AssetPriority.EffectAsset, data);
         }
 
+        /// <summary>
+        /// 显示实体
+        /// </summary>
+        /// <param name="entityComponent"></param>
+        /// <param name="logicType">实体的逻辑类，类似ai</param>
+        /// <param name="entityGroup">实体所属的分组，例如“Monster”</param>
+        /// <param name="priority"></param>
+        /// <param name="data"></param>
         private static void ShowEntity(this EntityComponent entityComponent, Type logicType, string entityGroup, int priority, EntityData data)
         {
             if (data == null)

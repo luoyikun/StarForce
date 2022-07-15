@@ -13,6 +13,7 @@ namespace GameFramework.Resource
     {
         private sealed partial class ResourceLoader
         {
+            //加载主asset 任务
             private sealed class LoadAssetTask : LoadResourceTaskBase
             {
                 private LoadAssetCallbacks m_LoadAssetCallbacks; //加载成功回调
@@ -32,6 +33,7 @@ namespace GameFramework.Resource
 
                 public static LoadAssetTask Create(string assetName, Type assetType, int priority, ResourceInfo resourceInfo, string[] dependencyAssetNames, LoadAssetCallbacks loadAssetCallbacks, object userData)
                 {
+                    GameFrameworkLog.Info("创建加载asset主任务{0}", assetName);
                     LoadAssetTask loadAssetTask = ReferencePool.Acquire<LoadAssetTask>();
                     loadAssetTask.Initialize(assetName, assetType, priority, resourceInfo, dependencyAssetNames, userData);
                     loadAssetTask.m_LoadAssetCallbacks = loadAssetCallbacks;
@@ -46,6 +48,7 @@ namespace GameFramework.Resource
 
                 public override void OnLoadAssetSuccess(LoadResourceAgent agent, object asset, float duration)
                 {
+                    GameFrameworkLog.Info("目标资源加载成功回调{0}-->{1}", AssetName,asset);
                     base.OnLoadAssetSuccess(agent, asset, duration);
                     if (m_LoadAssetCallbacks.LoadAssetSuccessCallback != null)
                     {

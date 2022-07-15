@@ -21,11 +21,14 @@ public class ProcedureTest : GameFramework.Procedure.ProcedureBase
     void TestLoadResource()
     {
         //public void LoadAsset(string assetName, LoadAssetCallbacks loadAssetCallbacks)
-        StarForce.GameEntry.Resource.LoadAsset("Assets/GameMain/UI/UIForms/DialogForm.prefab",new GameFramework.Resource.LoadAssetCallbacks(LoadAssetSuccessCallback));
+        StarForce.GameEntry.Resource.LoadAsset("Assets/GameMain/luoyikun/Cube1.prefab",new GameFramework.Resource.LoadAssetCallbacks(LoadAssetSuccessCallback));
+        //StarForce.GameEntry.Resource.LoadAsset("Assets/GameMain/UI/UIForms/AboutForm.prefab", new GameFramework.Resource.LoadAssetCallbacks(LoadAssetSuccessCallback));
     }
 
     void LoadAssetSuccessCallback(string assetName, object asset, float duration, object userData)
     {
-        GameFrameworkLog.Info("加载成功{0}", assetName, asset);
+        GameFrameworkLog.Info("加载成功{0}，{1}", assetName, asset);
+
+        //StarForce.GameEntry.Resource.UnloadAsset(asset);
     }
 }

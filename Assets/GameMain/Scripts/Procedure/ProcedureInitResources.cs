@@ -42,7 +42,9 @@ namespace StarForce
                 return;
             }
 
-            ChangeState<ProcedurePreload>(procedureOwner);
+            //ChangeState<ProcedurePreload>(procedureOwner);
+
+            ChangeState<ProcedureTest>(procedureOwner);
         }
 
         private void OnInitResourcesComplete()

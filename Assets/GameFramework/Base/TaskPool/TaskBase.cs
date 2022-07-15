@@ -24,6 +24,7 @@ namespace GameFramework
 
         private bool m_Done;
 
+        public string m_name;
         /// <summary>
         /// 初始化任务基类的新实例。
         /// </summary>
@@ -36,6 +37,7 @@ namespace GameFramework
             m_UserData = null;
         }
 
+        
         /// <summary>
         /// 获取任务的序列编号。
         /// </summary>
@@ -119,7 +121,7 @@ namespace GameFramework
             m_Tag = tag;
             m_Priority = priority;
             //string sUserData = Utility.Json.ToJson(userData);
-            GameFrameworkLog.Info("初始化任务：{0}", userData);
+            //GameFrameworkLog.Info("初始化任务：{0}", userData);
             
             m_UserData = userData;
             m_Done = false;

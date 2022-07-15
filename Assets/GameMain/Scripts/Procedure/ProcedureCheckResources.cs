@@ -47,8 +47,8 @@ namespace StarForce
             }
             else
             {
-                //ChangeState<ProcedurePreload>(procedureOwner);
-                ChangeState<ProcedureTest>(procedureOwner);
+                ChangeState<ProcedurePreload>(procedureOwner);
+                //ChangeState<ProcedureTest>(procedureOwner);
             }
         }
 

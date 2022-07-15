@@ -44,7 +44,7 @@ namespace GameFramework.ObjectPool
         }
 
         /// <summary>
-        /// 获取对象。
+        /// 获取对象。 指的是asset  的bundle
         /// </summary>
         public object Target
         {

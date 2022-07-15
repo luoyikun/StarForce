@@ -187,12 +187,13 @@ namespace GameFramework.Resource
                         //如果依赖asset不能spawn，接着等待
                         if (!m_ResourceLoader.m_AssetPool.CanSpawn(dependencyAssetName))
                         {
+                            GameFrameworkLog.Info("{0}依赖项{1}未加载完成", m_Task.AssetName,dependencyAssetName);
                             m_Task.StartTime = default(DateTime);
                             return StartTaskStatus.HasToWait;
                         }
                     }
 
-                    //resource正在加载，等待，防止重复加载
+                    //resource正在加载，等待，防止重复加载，例如task1，task2 都是加载同一个resource
                     string resourceName = resourceInfo.ResourceName.Name;
                     if (IsResourceLoading(resourceName))
                     {
@@ -345,7 +346,7 @@ namespace GameFramework.Resource
                 /// <param name="e"></param>
                 private void OnLoadResourceAgentHelperLoadComplete(object sender, LoadResourceAgentHelperLoadCompleteEventArgs e)
                 {
-                    GameFrameworkLog.Info("asset加载完成{0}", m_Task.AssetName);
+                    
                     AssetObject assetObject = null;
                     if (m_Task.IsScene) //如果是场景
                     {
@@ -356,6 +357,7 @@ namespace GameFramework.Resource
                     {
                         List<object> dependencyAssets = m_Task.GetDependencyAssets();
                         assetObject = AssetObject.Create(m_Task.AssetName, e.Asset, dependencyAssets, m_Task.ResourceObject.Target, m_ResourceHelper, m_ResourceLoader);
+                        GameFrameworkLog.Info("asset-->{0}加载完成,并且创建assetObject到m_AssetPool缓冲池中", m_Task.AssetName);
                         m_ResourceLoader.m_AssetPool.Register(assetObject, true);
                         m_ResourceLoader.m_AssetToResourceMap.Add(e.Asset, m_Task.ResourceObject.Target);
                         foreach (object dependencyAsset in dependencyAssets)

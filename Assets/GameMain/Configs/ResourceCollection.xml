@@ -10,6 +10,8 @@
       <Resource Name="Localization/Dictionaries" Variant="ko-kr" LoadType="0" Packed="True" ResourceGroups="Base" />
       <Resource Name="Localization/Dictionaries" Variant="zh-cn" LoadType="0" Packed="True" ResourceGroups="Base" />
       <Resource Name="Localization/Dictionaries" Variant="zh-tw" LoadType="0" Packed="True" ResourceGroups="Base" />
+      <Resource Name="luoyikun/Cube1" LoadType="0" Packed="False" />
+      <Resource Name="luoyikun/Cube2" LoadType="0" Packed="False" />
       <Resource Name="Materials" LoadType="0" Packed="True" />
       <Resource Name="Meshes" LoadType="0" Packed="True" />
       <Resource Name="Music/About" LoadType="0" Packed="True" ResourceGroups="Music" />
@@ -74,6 +76,7 @@
       <Asset Guid="578af1667322bab45b652b79a40bb4fb" ResourceName="Materials" />
       <Asset Guid="583ff7026dac91849b7c7b2468ba456b" ResourceName="Materials" />
       <Asset Guid="5dcd89912e222bf4c87f76db4044bc5e" ResourceName="Localization/Dictionaries" ResourceVariant="ko-kr" />
+      <Asset Guid="60a1645014198164680bd6871329b73b" ResourceName="luoyikun/Cube1" />
       <Asset Guid="62af9e5c8f39cfa49af9e10ccf42f1da" ResourceName="UI/UISprites/Common" />
       <Asset Guid="638ff8ae4a0d15047839cd265d3bc296" ResourceName="Music/Background" />
       <Asset Guid="63fe6ff9ab9e1433f8db4ebd940f2442" ResourceName="Materials" />
@@ -145,6 +148,7 @@
       <Asset Guid="e830964cdb85ff3429bca484c16bab44" ResourceName="UI/UISounds" />
       <Asset Guid="e85864330b68dde498dcb6e8711815d3" ResourceName="UI/UISprites/Common" />
       <Asset Guid="eabb37cb6d738b443b398b701a64cd88" ResourceName="Textures" />
+      <Asset Guid="f0ce9e0e8a0456d4f992300134cfd602" ResourceName="luoyikun/Cube2" />
       <Asset Guid="f2f4df0b7211e4c42a5638273525d8ee" ResourceName="UI/UISprites/Common" />
       <Asset Guid="f2f97a713beae744181ba934f9c4113a" ResourceName="DataTables" />
       <Asset Guid="f36c72c738c55f741afcd674a0b1245f" ResourceName="Materials" />

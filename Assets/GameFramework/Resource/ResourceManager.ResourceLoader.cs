@@ -24,8 +24,8 @@ namespace GameFramework.Resource
 
             private readonly ResourceManager m_ResourceManager;
             private readonly TaskPool<LoadResourceTaskBase> m_TaskPool;
-            private readonly Dictionary<object, int> m_AssetDependencyCount; //asset引用计数
-            private readonly Dictionary<object, int> m_ResourceDependencyCount; //resource引用计数
+            private readonly Dictionary<object, int> m_AssetDependencyCount; //依赖的asset引用计数
+            private readonly Dictionary<object, int> m_ResourceDependencyCount; //依赖的resource引用计数
             private readonly Dictionary<object, object> m_AssetToResourceMap;//通过
             private readonly Dictionary<string, object> m_SceneToAssetMap; //通过string，找到加载到内存中的asset场景资源
             private readonly LoadBytesCallbacks m_LoadBytesCallbacks;
@@ -333,6 +333,7 @@ namespace GameFramework.Resource
                 }
 
                 LoadAssetTask mainTask = LoadAssetTask.Create(assetName, assetType, priority, resourceInfo, dependencyAssetNames, loadAssetCallbacks, userData);
+                m_TaskPool.AddTask(mainTask);
                 foreach (string dependencyAssetName in dependencyAssetNames)
                 {
                     if (!LoadDependencyAsset(dependencyAssetName, priority, mainTask, userData))
@@ -348,7 +349,8 @@ namespace GameFramework.Resource
                     }
                 }
 
-                m_TaskPool.AddTask(mainTask);
+                
+
                 if (!resourceInfo.Ready)
                 {
                     m_ResourceManager.UpdateResource(resourceInfo.ResourceName);
@@ -814,6 +816,7 @@ namespace GameFramework.Resource
             /// <returns></returns>
             private bool LoadDependencyAsset(string assetName, int priority, LoadResourceTaskBase mainTask, object userData)
             {
+                GameFrameworkLog.Info("加载依赖资源{0}", assetName);
                 if (mainTask == null)
                 {
                     throw new GameFrameworkException("Main task is invalid.");
@@ -831,7 +834,24 @@ namespace GameFramework.Resource
                     return false;
                 }
 
+                List<LoadResourceTaskBase> listTask = new List<LoadResourceTaskBase>(8);
+                m_TaskPool.GetAllTasks(listTask);
+                bool isExist = false;
+                GameFrameworkLog.Info("所有任务数量{0}", listTask.Count);
+                for (int i = 0; i < listTask.Count; i++)
+                {
+                    if (listTask[i].AssetName == assetName)
+                    {
+                        GameFrameworkLog.Info("所有任务中存在{0}", assetName);
+                        isExist = true;
+                        return true;                   
+                    }
+                }
+
+
                 LoadDependencyAssetTask dependencyTask = LoadDependencyAssetTask.Create(assetName, priority, resourceInfo, dependencyAssetNames, mainTask, userData);
+                m_TaskPool.AddTask(dependencyTask);
+
                 foreach (string dependencyAssetName in dependencyAssetNames)
                 {
                     if (!LoadDependencyAsset(dependencyAssetName, priority, dependencyTask, userData)) //递归调用，加载依赖项，如果有循环依赖如何避免，a引用b，b引用a，因为加载中，asset，resource都有缓存，不会重复创建任务
@@ -840,7 +860,8 @@ namespace GameFramework.Resource
                     }
                 }
 
-                m_TaskPool.AddTask(dependencyTask);
+                
+
                 if (!resourceInfo.Ready)
                 {
                     m_ResourceManager.UpdateResource(resourceInfo.ResourceName);

@@ -17,6 +17,11 @@ namespace UnityGameFramework.Editor.ResourceTools
             private readonly string m_HostAssetName;
             private readonly string m_DependencyAssetName;
 
+            /// <summary>
+            /// 印记
+            /// </summary>
+            /// <param name="hostAssetName">主目标asset</param>
+            /// <param name="dependencyAssetName">被依赖的asset</param>
             public Stamp(string hostAssetName, string dependencyAssetName)
             {
                 m_HostAssetName = hostAssetName;

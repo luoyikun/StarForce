@@ -23,7 +23,10 @@ namespace UnityGameFramework.Editor.ResourceTools
 
             public string[][] Check()
             {
+                //唯一的string 的数列
                 HashSet<string> hosts = new HashSet<string>();
+
+                //所有有依赖的asset
                 foreach (Stamp stamp in m_Stamps)
                 {
                     hosts.Add(stamp.HostAssetName);
