@@ -54,7 +54,7 @@ namespace GameFramework.ObjectPool
         bool HasObjectPool(Type objectType, string name);
 
         /// <summary>
-        /// 检查是否存在对象池。
+        /// 检查是否存在对象池。，Predicate内置委托用于实现返回类型为bool型的函数的调用
         /// </summary>
         /// <param name="condition">要检查的条件。</param>
         /// <returns>是否存在对象池。</returns>

@@ -107,6 +107,7 @@ namespace UnityGameFramework.Runtime
                 return;
             }
 
+            //原先实体上逻辑先清除
             if (m_EntityLogic != null)
             {
                 if (m_EntityLogic.GetType() == entityLogicType)
@@ -120,6 +121,8 @@ namespace UnityGameFramework.Runtime
             }
 
             m_EntityLogic = gameObject.AddComponent(entityLogicType) as EntityLogic;
+
+            GameFrameworkLog.Info("实体OnInit挂载逻辑:{0}", m_EntityLogic);
             if (m_EntityLogic == null)
             {
                 Log.Error("Entity '{0}' can not add entity logic.", entityAssetName);

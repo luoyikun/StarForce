@@ -19,8 +19,8 @@ namespace GameFramework.Entity
     {
         private readonly Dictionary<int, EntityInfo> m_EntityInfos;
         private readonly Dictionary<string, EntityGroup> m_EntityGroups;
-        private readonly Dictionary<int, int> m_EntitiesBeingLoaded;
-        private readonly HashSet<int> m_EntitiesToReleaseOnLoad;
+        private readonly Dictionary<int, int> m_EntitiesBeingLoaded; //正在加载中实体 ，key 为 实体id
+        private readonly HashSet<int> m_EntitiesToReleaseOnLoad;//等待释放实体,id 为序列id
         private readonly Queue<EntityInfo> m_RecycleQueue;
         private readonly LoadAssetCallbacks m_LoadAssetCallbacks;
         private IObjectPoolManager m_ObjectPoolManager;
@@ -161,6 +161,7 @@ namespace GameFramework.Entity
         /// <param name="realElapseSeconds">真实流逝时间，以秒为单位。</param>
         internal override void Update(float elapseSeconds, float realElapseSeconds)
         {
+            //处理回收队列的实体
             while (m_RecycleQueue.Count > 0)
             {
                 EntityInfo entityInfo = m_RecycleQueue.Dequeue();
@@ -174,10 +175,11 @@ namespace GameFramework.Entity
                 entityInfo.Status = EntityStatus.WillRecycle;
                 entity.OnRecycle();
                 entityInfo.Status = EntityStatus.Recycled;
-                entityGroup.UnspawnEntity(entity);
+                entityGroup.UnspawnEntity(entity); //实体组回收，相当于对象池
                 ReferencePool.Release(entityInfo);
             }
 
+            //实体组轮更新
             foreach (KeyValuePair<string, EntityGroup> entityGroup in m_EntityGroups)
             {
                 entityGroup.Value.Update(elapseSeconds, realElapseSeconds);
@@ -310,7 +312,7 @@ namespace GameFramework.Entity
         }
 
         /// <summary>
-        /// 增加实体组。
+        /// 增加实体组。必须先填充实体组
         /// </summary>
         /// <param name="entityGroupName">实体组名称。</param>
         /// <param name="instanceAutoReleaseInterval">实体实例对象池自动释放可释放对象的间隔秒数。</param>
@@ -673,6 +675,7 @@ namespace GameFramework.Entity
         {
             if (IsLoadingEntity(entityId))
             {
+                GameFrameworkLog.Info("实体{0}正在加载等待释放", entityId);
                 m_EntitiesToReleaseOnLoad.Add(m_EntitiesBeingLoaded[entityId]);
                 m_EntitiesBeingLoaded.Remove(entityId);
                 return;
@@ -906,6 +909,7 @@ namespace GameFramework.Entity
         /// <param name="userData">用户自定义数据。</param>
         public void AttachEntity(int childEntityId, int parentEntityId, object userData)
         {
+            GameFrameworkLog.Info("实体{0}附加到{1}", childEntityId, parentEntityId);
             if (childEntityId == parentEntityId)
             {
                 throw new GameFrameworkException(Utility.Text.Format("Can not attach entity when child entity id equals to parent entity id '{0}'.", parentEntityId));
@@ -1161,6 +1165,7 @@ namespace GameFramework.Entity
 
         private void InternalShowEntity(int entityId, string entityAssetName, EntityGroup entityGroup, object entityInstance, bool isNewInstance, float duration, object userData)
         {
+            GameFrameworkLog.Info("InternalShowEntity：{0}", entityAssetName);
             try
             {
                 IEntity entity = m_EntityHelper.CreateEntity(entityInstance, entityGroup, userData);
@@ -1202,6 +1207,7 @@ namespace GameFramework.Entity
 
         private void InternalHideEntity(EntityInfo entityInfo, object userData)
         {
+            //先隐藏子实体
             while (entityInfo.ChildEntityCount > 0)
             {
                 IEntity childEntity = entityInfo.GetChildEntity();
@@ -1213,12 +1219,14 @@ namespace GameFramework.Entity
                 return;
             }
 
+            //把自己从父实体上移除
             IEntity entity = entityInfo.Entity;
             DetachEntity(entity.Id, userData);
             entityInfo.Status = EntityStatus.WillHide;
             entity.OnHide(m_IsShutdown, userData);
             entityInfo.Status = EntityStatus.Hidden;
 
+            //实体组移除
             EntityGroup entityGroup = (EntityGroup)entity.EntityGroup;
             if (entityGroup == null)
             {
@@ -1238,11 +1246,20 @@ namespace GameFramework.Entity
                 ReferencePool.Release(hideEntityCompleteEventArgs);
             }
 
+            //放入到回收队列
             m_RecycleQueue.Enqueue(entityInfo);
         }
 
+        /// <summary>
+        /// 实体资源加载成功
+        /// </summary>
+        /// <param name="entityAssetName"></param>
+        /// <param name="entityAsset"></param>
+        /// <param name="duration"></param>
+        /// <param name="userData"></param>
         private void LoadAssetSuccessCallback(string entityAssetName, object entityAsset, float duration, object userData)
         {
+            GameFrameworkLog.Info("实体资源加载成功{0}",entityAssetName);
             ShowEntityInfo showEntityInfo = (ShowEntityInfo)userData;
             if (showEntityInfo == null)
             {
@@ -1251,6 +1268,7 @@ namespace GameFramework.Entity
 
             if (m_EntitiesToReleaseOnLoad.Contains(showEntityInfo.SerialId))
             {
+                //如果当前是在等待释放实体表，先在待释放中移除移除
                 m_EntitiesToReleaseOnLoad.Remove(showEntityInfo.SerialId);
                 ReferencePool.Release(showEntityInfo);
                 m_EntityHelper.ReleaseEntity(entityAsset, null);
@@ -1258,6 +1276,8 @@ namespace GameFramework.Entity
             }
 
             m_EntitiesBeingLoaded.Remove(showEntityInfo.EntityId);
+
+            //实例化出来
             EntityInstanceObject entityInstanceObject = EntityInstanceObject.Create(entityAssetName, entityAsset, m_EntityHelper.InstantiateEntity(entityAsset), m_EntityHelper);
             showEntityInfo.EntityGroup.RegisterEntityInstanceObject(entityInstanceObject, true);
 

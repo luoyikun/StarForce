@@ -174,7 +174,7 @@ namespace GameFramework.ObjectPool
             public void Unspawn()
             {
                 m_Object.OnUnspawn();
-                m_Object.LastUseTime = DateTime.UtcNow;
+                m_Object.LastUseTime = DateTime.UtcNow; //回收时也赋值一次上次使用时间
                 m_SpawnCount--;
                 if (m_SpawnCount < 0)
                 {

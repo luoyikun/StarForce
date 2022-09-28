@@ -11,10 +11,12 @@ using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedure
 
 namespace StarForce
 {
+    //进入游戏主流程
     public class ProcedureMain : ProcedureBase
     {
         private const float GameOverDelayedSeconds = 2f;
 
+        //游戏模式，与模式的逻辑处理字典
         private readonly Dictionary<GameMode, GameBase> m_Games = new Dictionary<GameMode, GameBase>();
         private GameBase m_CurrentGame = null;
         private bool m_GotoMenu = false;

@@ -9,10 +9,11 @@ namespace GameFramework.Entity
 {
     internal sealed partial class EntityManager : GameFrameworkModule, IEntityManager
     {
+        //显示 entityinfo，只是在加载中使用，加载完成后回到引用池
         private sealed class ShowEntityInfo : IReference
         {
-            private int m_SerialId;
-            private int m_EntityId;
+            private int m_SerialId; //序列id（加载id）
+            private int m_EntityId;  //创建后实体id，本地为负数--，网络为正数++
             private EntityGroup m_EntityGroup;
             private object m_UserData;
 

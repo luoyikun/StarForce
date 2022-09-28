@@ -28,6 +28,7 @@ namespace StarForce
         {
             base.Update(elapseSeconds, realElapseSeconds);
 
+            //每隔1s随机产生一种陨石
             m_ElapseSeconds += elapseSeconds;
             if (m_ElapseSeconds >= 1f)
             {
@@ -35,10 +36,13 @@ namespace StarForce
                 IDataTable<DRAsteroid> dtAsteroid = GameEntry.DataTable.GetDataTable<DRAsteroid>(); //读取流星表
                 float randomPositionX = SceneBackground.EnemySpawnBoundary.bounds.min.x + SceneBackground.EnemySpawnBoundary.bounds.size.x * (float)Utility.Random.GetRandomDouble();
                 float randomPositionZ = SceneBackground.EnemySpawnBoundary.bounds.min.z + SceneBackground.EnemySpawnBoundary.bounds.size.z * (float)Utility.Random.GetRandomDouble();
-                GameEntry.Entity.ShowAsteroid(new AsteroidData(GameEntry.Entity.GenerateSerialId(), 60000 + Utility.Random.GetRandom(dtAsteroid.Count))
+                GameEntry.Entity.ShowAsteroid(
+                new AsteroidData(GameEntry.Entity.GenerateSerialId(), 60000 + Utility.Random.GetRandom(dtAsteroid.Count))
                 {
+                    //位置随机
                     Position = new Vector3(randomPositionX, 0f, randomPositionZ),
-                });
+                }
+                );
             }
         }
     }

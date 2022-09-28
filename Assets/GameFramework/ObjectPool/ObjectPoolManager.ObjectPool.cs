@@ -13,12 +13,12 @@ namespace GameFramework.ObjectPool
     internal sealed partial class ObjectPoolManager : GameFrameworkModule, IObjectPoolManager
     {
         /// <summary>
-        /// 对象池。
+        /// 对象池。这个也是指一类对象
         /// </summary>
         /// <typeparam name="T">对象类型。</typeparam>
         private sealed class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : ObjectBase
         {
-            private readonly GameFrameworkMultiDictionary<string, Object<T>> m_Objects;//一对多的对象池，key为名字，value 为list<T>
+            private readonly GameFrameworkMultiDictionary<string, Object<T>> m_Objects;//一对多的对象池，key为名字，value 为list<T>。。如果是陨石对象池，key为陨石1，陨石2这种
             private readonly Dictionary<object, Object<T>> m_ObjectMap;
             private readonly ReleaseObjectFilterCallback<T> m_DefaultReleaseObjectFilterCallback;
             private readonly List<T> m_CachedCanReleaseObjects;
@@ -191,6 +191,7 @@ namespace GameFramework.ObjectPool
             /// <param name="spawned">对象是否已被获取。</param>
             public void Register(T obj, bool spawned)
             {
+                GameFrameworkLog.Info("对象池注册{0}", obj.Name);
                 if (obj == null)
                 {
                     throw new GameFrameworkException("Object is invalid.");

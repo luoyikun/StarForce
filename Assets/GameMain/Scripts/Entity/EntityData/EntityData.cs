@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace StarForce
 {
+    //实体数据
     [Serializable]
     public abstract class EntityData
     {

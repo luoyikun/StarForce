@@ -15,7 +15,7 @@ namespace GameFramework.Resource
         private sealed partial class ResourceLoader
         {
             /// <summary>
-            /// 资源对象。为内存中的一个asset 对象，非gameobject
+            /// 资源对象。为内存中的一个asset 对象，非gameobject，可被对象池管理，内部target指向unity中asset
             /// </summary>
             private sealed class AssetObject : ObjectBase
             {
@@ -37,6 +37,7 @@ namespace GameFramework.Resource
                     get
                     {
                         int targetReferenceCount = 0;
+                        //被依赖引用次数为0，才可以删除
                         m_ResourceLoader.m_AssetDependencyCount.TryGetValue(Target, out targetReferenceCount);
                         return base.CustomCanReleaseFlag && targetReferenceCount <= 0;
                     }
@@ -81,7 +82,7 @@ namespace GameFramework.Resource
                     assetObject.m_ResourceHelper = resourceHelper;
                     assetObject.m_ResourceLoader = resourceLoader;
 
-                    //所有依赖的asset 引用+1，有它自己+1吗
+                    //所有依赖的asset 引用+1，它自己次数不会+1
                     foreach (object dependencyAsset in dependencyAssets)
                     {
                         int referenceCount = 0;
@@ -124,7 +125,7 @@ namespace GameFramework.Resource
                     if (!isShutdown)
                     {
                         int targetReferenceCount = 0;
-                        //不为0，不可以主动卸载
+                        //不为0，说明还被其他依赖，不可以主动卸载
                         if (m_ResourceLoader.m_AssetDependencyCount.TryGetValue(Target, out targetReferenceCount) && targetReferenceCount > 0)
                         {
                             throw new GameFrameworkException(Utility.Text.Format("Asset target '{0}' reference count is '{1}' larger than 0.", Name, targetReferenceCount));
@@ -149,7 +150,8 @@ namespace GameFramework.Resource
 
                     m_ResourceLoader.m_AssetDependencyCount.Remove(Target);
                     m_ResourceLoader.m_AssetToResourceMap.Remove(Target);
-                    m_ResourceHelper.Release(Target); //AssetBundle.Unload(true),这里传入的是asset
+                    m_ResourceHelper.Release(Target); //AssetBundle.Unload(true),这里传入的是asset
+
                 }
             }
         }

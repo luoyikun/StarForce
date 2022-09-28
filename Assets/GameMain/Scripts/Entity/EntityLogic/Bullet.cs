@@ -56,6 +56,7 @@ namespace StarForce
         {
             base.OnUpdate(elapseSeconds, realElapseSeconds);
 
+            //子弹在Update中插值往前
             CachedTransform.Translate(Vector3.forward * m_BulletData.Speed * elapseSeconds, Space.World);
         }
     }

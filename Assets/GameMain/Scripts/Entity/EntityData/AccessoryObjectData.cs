@@ -10,6 +10,7 @@ using UnityEngine;
 
 namespace StarForce
 {
+    //配件对象数据
     [Serializable]
     public abstract class AccessoryObjectData : EntityData
     {

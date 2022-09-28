@@ -45,10 +45,11 @@ namespace StarForce
             }
 
             SceneBackground.VisibleBoundary.gameObject.GetOrAddComponent<HideByBoundary>();
+            //创建主角--》异步加载asset
             GameEntry.Entity.ShowMyAircraft(new MyAircraftData(GameEntry.Entity.GenerateSerialId(), 10000)
             {
                 Name = "My Aircraft",
-                Position = Vector3.zero,
+                Position = Vector3.zero, //创建完成后设置初始位置
             });
 
             GameOver = false;

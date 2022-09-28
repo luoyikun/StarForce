@@ -19,7 +19,7 @@ namespace GameFramework.Entity
         {
             private readonly string m_Name;
             private readonly IEntityGroupHelper m_EntityGroupHelper;
-            private readonly IObjectPool<EntityInstanceObject> m_InstancePool;
+            private readonly IObjectPool<EntityInstanceObject> m_InstancePool; //每个对象组有个对象池，不是指GameObject对象，而是能生产，回收。。。回收的是ObjectBase里面的Target
             private readonly GameFrameworkLinkedList<IEntity> m_Entities;
             private LinkedListNode<IEntity> m_CachedNode;
 
@@ -367,6 +367,7 @@ namespace GameFramework.Entity
 
             public void UnspawnEntity(IEntity entity)
             {
+                //回收的是GameObject
                 m_InstancePool.Unspawn(entity.Handle);
             }
 

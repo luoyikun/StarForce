@@ -12,6 +12,7 @@ namespace UnityGameFramework.Editor.ResourceTools
 {
     public sealed partial class ResourceAnalyzerController
     {
+        //一条依赖的键对，例如 a --》c    a --》b
         [StructLayout(LayoutKind.Auto)]
         private struct Stamp
         {

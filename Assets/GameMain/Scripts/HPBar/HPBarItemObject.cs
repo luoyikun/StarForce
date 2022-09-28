@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace StarForce
 {
+    //血条引用对象，不会继承Monobehaviour，内部的target是gameObject
     public class HPBarItemObject : ObjectBase
     {
         public static HPBarItemObject Create(object target)

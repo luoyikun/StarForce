@@ -78,6 +78,7 @@ namespace StarForce
                 return;
             }
 
+            //背景地图的滚动
             Vector3 speed = Vector3.ClampMagnitude(direction.normalized * m_MyAircraftData.Speed * elapseSeconds, direction.magnitude);
             CachedTransform.localPosition = new Vector3
             (

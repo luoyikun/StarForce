@@ -36,6 +36,7 @@ namespace StarForce
             }
 
             m_CachedCanvas = m_HPBarInstanceRoot.GetComponent<Canvas>();
+            //创建血条对象池
             m_HPBarItemObjectPool = GameEntry.ObjectPool.CreateSingleSpawnObjectPool<HPBarItemObject>("HPBarItem", m_InstancePoolCapacity);
             m_ActiveHPBarItems = new List<HPBarItem>();
         }
@@ -105,10 +106,12 @@ namespace StarForce
         {
             HPBarItem hpBarItem = null;
             HPBarItemObject hpBarItemObject = m_HPBarItemObjectPool.Spawn();
+            //能生产，就从对象池里取
             if (hpBarItemObject != null)
             {
                 hpBarItem = (HPBarItem)hpBarItemObject.Target;
             }
+            //否则实例化一个，再注册进入对象池中
             else
             {
                 hpBarItem = Instantiate(m_HPBarItemTemplate);

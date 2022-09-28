@@ -39,6 +39,7 @@ namespace StarForce
         public AircraftData(int entityId, int typeId, CampType camp)
             : base(entityId, typeId, camp)
         {
+            //表里创建好，一个飞船对应的武器
             IDataTable<DRAircraft> dtAircraft = GameEntry.DataTable.GetDataTable<DRAircraft>();
             DRAircraft drAircraft = dtAircraft.GetDataRow(TypeId);
             if (drAircraft == null)

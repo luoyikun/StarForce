@@ -17,7 +17,7 @@ namespace UnityGameFramework.Runtime
         private bool m_Available = false;
         private bool m_Visible = false;
         private Entity m_Entity = null;
-        private Transform m_CachedTransform = null;
+        private Transform m_CachedTransform = null;//缓存自身transform
         private int m_OriginalLayer = 0;
         private Transform m_OriginalTransform = null;
 

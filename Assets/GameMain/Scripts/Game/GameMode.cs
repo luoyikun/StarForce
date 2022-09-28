@@ -8,7 +8,7 @@
 namespace StarForce
 {
     /// <summary>
-    /// 游戏模式。
+    /// 游戏模式。 例如有多个玩法，例如pvp，pve这些概念
     /// </summary>
     public enum GameMode : byte
     {

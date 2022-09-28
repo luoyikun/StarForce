@@ -29,7 +29,7 @@ namespace GameFramework.Entity
         }
 
         /// <summary>
-        /// 获取实体实例。
+        /// 获取实体实例。 对于实体而言是GameObject
         /// </summary>
         object Handle
         {

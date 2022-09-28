@@ -65,7 +65,7 @@ namespace StarForce
             }
 
             Name = Utility.Text.Format("[Entity {0}]", Id);
-            CachedTransform.localPosition = m_EntityData.Position;
+            CachedTransform.localPosition = m_EntityData.Position;//实体显示出来，在onshow，显示位置
             CachedTransform.localRotation = m_EntityData.Rotation;
             CachedTransform.localScale = Vector3.one;
         }

@@ -10,7 +10,7 @@ using System;
 namespace GameFramework.ObjectPool
 {
     /// <summary>
-    /// 对象基类。
+    /// 对象基类。用于对象池回收，同时它也是引用池的一种
     /// </summary>
     public abstract class ObjectBase : IReference
     {
@@ -44,7 +44,7 @@ namespace GameFramework.ObjectPool
         }
 
         /// <summary>
-        /// 获取对象。 指的是asset  的bundle
+        /// 获取对象。 指的是asset  的bundle，或者是实体的GameObject（资源加载完后，会通过实体辅助器实例化）
         /// </summary>
         public object Target
         {
@@ -196,10 +196,11 @@ namespace GameFramework.ObjectPool
         /// </summary>
         protected internal virtual void OnUnspawn()
         {
+            GameFrameworkLog.Info("ObjBase.OnUnspawn {0}", Name);
         }
 
         /// <summary>
-        /// 释放对象。
+        /// 释放对象。如果是物体一般是执行Object.Destroy(gameObject);
         /// </summary>
         /// <param name="isShutdown">是否是关闭对象池时触发。</param>
         protected internal abstract void Release(bool isShutdown);
