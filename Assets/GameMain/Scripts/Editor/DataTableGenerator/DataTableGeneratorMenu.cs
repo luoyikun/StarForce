@@ -24,8 +24,9 @@ namespace StarForce.Editor.DataTableTools
                     Debug.LogError(Utility.Text.Format("Check raw data failure. DataTableName='{0}'", dataTableName));
                     break;
                 }
-
+                //生成二进制
                 DataTableGenerator.GenerateDataFile(dataTableProcessor, dataTableName);
+                //生成类
                 DataTableGenerator.GenerateCodeFile(dataTableProcessor, dataTableName);
             }
 

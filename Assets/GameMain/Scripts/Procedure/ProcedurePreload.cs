@@ -17,6 +17,7 @@ namespace StarForce
 {
     public class ProcedurePreload : ProcedureBase
     {
+        bool m_isEnterNormalProcedure = false;
         public static readonly string[] DataTableNames = new string[]
         {
             "Aircraft",
@@ -84,7 +85,13 @@ namespace StarForce
             }
             //设置跳转下一个场景的id
             procedureOwner.SetData<VarInt32>("NextSceneId", GameEntry.Config.GetInt("Scene.Menu"));
-            ChangeState<ProcedureChangeScene>(procedureOwner);
+            if (m_isEnterNormalProcedure)
+            {
+                ChangeState<ProcedureChangeScene>(procedureOwner);
+            }
+            else {
+                ChangeState<ProcedureLoadResTest>(procedureOwner);
+            }
         }
 
         private void PreloadResources()

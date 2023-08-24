@@ -5,6 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using GameFramework;
 using GameFramework.Entity;
 using UnityEngine;
 
@@ -24,6 +25,7 @@ namespace UnityGameFramework.Runtime
         /// <returns>实例化后的实体。</returns>
         public override object InstantiateEntity(object entityAsset)
         {
+            GameFrameworkLog.Info("实例化{0}", entityAsset);
             return Instantiate((Object)entityAsset);
         }
 

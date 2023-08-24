@@ -18,15 +18,28 @@ namespace GameFramework.ObjectPool
         /// <typeparam name="T">对象类型。</typeparam>
         private sealed class ObjectPool<T> : ObjectPoolBase, IObjectPool<T> where T : ObjectBase
         {
-            private readonly GameFrameworkMultiDictionary<string, Object<T>> m_Objects;//一对多的对象池，key为名字，value 为list<T>。。如果是陨石对象池，key为陨石1，陨石2这种
-            private readonly Dictionary<object, Object<T>> m_ObjectMap;
+            /// <summary>
+            /// 按照资源名，取出所有的对象列表
+            /// key:对象名字
+            /// value：List<Object<T>>,例如：List<Object<AssetObject>>
+            /// 可能出现的情况：key 为陨石1，value为 List<Object<AssetObject>>
+            /// key为陨石2，value为List<Object<AssetObject>>
+            /// </summary>
+            private readonly GameFrameworkMultiDictionary<string, Object<T>> m_Objects;
+
+            /// <summary>
+            /// 按照Mono对象，例如asset，bundle，GameObject，取出对象池中管理对象
+            /// key：Mono对象，例如asset，bundle，GameObject
+            /// value：对象
+            /// </summary>
+            private readonly Dictionary<object, Object<T>> m_ObjectMap; 
             private readonly ReleaseObjectFilterCallback<T> m_DefaultReleaseObjectFilterCallback;
             private readonly List<T> m_CachedCanReleaseObjects;
             private readonly List<T> m_CachedToReleaseObjects;
-            private readonly bool m_AllowMultiSpawn;
-            private float m_AutoReleaseInterval;
-            private int m_Capacity;
-            private float m_ExpireTime;
+            private readonly bool m_AllowMultiSpawn; //是否允许多次获取，即正在use中，也可以获取，针对资源为true
+            private float m_AutoReleaseInterval; //自动释放间隔，多少s轮询一次
+            private int m_Capacity; //总容量
+            private float m_ExpireTime; //到期时间，单位为s
             private int m_Priority;
             private float m_AutoReleaseTime;
 
@@ -191,7 +204,7 @@ namespace GameFramework.ObjectPool
             /// <param name="spawned">对象是否已被获取。</param>
             public void Register(T obj, bool spawned)
             {
-                GameFrameworkLog.Info("对象池注册{0}", obj.Name);
+                
                 if (obj == null)
                 {
                     throw new GameFrameworkException("Object is invalid.");
@@ -200,7 +213,7 @@ namespace GameFramework.ObjectPool
                 Object<T> internalObject = Object<T>.Create(obj, spawned);
                 m_Objects.Add(obj.Name, internalObject);
                 m_ObjectMap.Add(obj.Target, internalObject);
-
+                GameFrameworkLog.Info("对象池{0}->注册：{1}；Target指向资源{2}；已被获取{3}", Name,obj.Name,obj.Target, spawned);
                 if (Count > m_Capacity)
                 {
                     Release();
@@ -271,6 +284,7 @@ namespace GameFramework.ObjectPool
                     {
                         if (m_AllowMultiSpawn || !internalObject.IsInUse)
                         {
+                            GameFrameworkLog.Info("对象池Spawn:{0}，获取次数：{1}", name, internalObject.SpawnCount);
                             return internalObject.Spawn();
                         }
                     }
@@ -308,7 +322,7 @@ namespace GameFramework.ObjectPool
                 if (internalObject != null)
                 {
                     internalObject.Unspawn();
-                    GameFrameworkLog.Info("Unspawn-->{0}-->获取对象池中对象的数量{1},对象池容量{2},生产数量{3}", internalObject.Name, Count, m_Capacity, internalObject.SpawnCount);
+                    GameFrameworkLog.Info("Unspawn-->{0}-->获取对象池中对象的数量{1},对象池容量{2},改对象生产数量{3},类型{4}", internalObject.Name, Count, m_Capacity, internalObject.SpawnCount, target);
                     if (Count > m_Capacity && internalObject.SpawnCount <= 0)
                     {
                         Release();
@@ -597,6 +611,13 @@ namespace GameFramework.ObjectPool
                 }
             }
 
+            /// <summary>
+            /// 二次筛选释放
+            /// </summary>
+            /// <param name="candidateObjects">第一次列表去除了正在use，锁定，资源依赖>0 的</param>
+            /// <param name="toReleaseCount">待释放的总数</param>
+            /// <param name="expireTime">过期时刻</param>
+            /// <returns></returns>
             private List<T> DefaultReleaseObjectFilterCallback(List<T> candidateObjects, int toReleaseCount, DateTime expireTime)
             {
                 m_CachedToReleaseObjects.Clear();

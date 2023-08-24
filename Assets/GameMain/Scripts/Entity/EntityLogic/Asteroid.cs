@@ -11,7 +11,7 @@ using UnityGameFramework.Runtime;
 namespace StarForce
 {
     /// <summary>
-    /// 小行星类。
+    /// 小行星类。继承自mono，最后挂载在物体上
     /// </summary>
     public class Asteroid : TargetableObject
     {

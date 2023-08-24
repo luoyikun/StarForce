@@ -154,6 +154,7 @@ namespace GameFramework.Resource
                     //资源信息是ab信息，文件大小，加载方式
                     if (!resourceInfo.Ready)
                     {
+                        //未准备好，说明是资源信息文件中不存在的对象
                         GameFrameworkLog.Info("资源信息未准备好");
                         m_Task.StartTime = default(DateTime);
                         return StartTaskStatus.HasToWait;
@@ -168,23 +169,27 @@ namespace GameFramework.Resource
                         return StartTaskStatus.HasToWait;
                     }
 
-                    //任务不是场景，说明要实例化
+                    //场景不会对放入AssetPool中进行管理
                     if (!m_Task.IsScene)
                     {
-                        //从对象池里拿一个，已经可以从ab里实例出来asset，任务做完了。
-                        //是否是依赖的asset全部准备好了，才可以提取出一个
+                        //从对象池里拿一个 
                         AssetObject assetObject = m_ResourceLoader.m_AssetPool.Spawn(m_Task.AssetName);
                         if (assetObject != null)
                         {
+                            //说明资源之前加载过，且在AssetObject缓存池中
+                            //一旦成功执行Spawn，Spawn+1，在释放资源时不为0会跳过
+                            GameFrameworkLog.Info("AssetPool获取到了{0}，不需要加载，直接返回asset", m_Task.AssetName);
+                            //如果是实体，实例化asset，并且新建一个实体对象
                             OnAssetObjectReady(assetObject);
                             return StartTaskStatus.Done;
                         }
+                        GameFrameworkLog.Info("AssetPool未获取到{0}，说明需要加载asset或者bundle", m_Task.AssetName);
                     }
 
-                    //遍历依赖
+                    //遍历依赖asset
                     foreach (string dependencyAssetName in m_Task.GetDependencyAssetNames())
                     {
-                        //如果依赖asset不能spawn，接着等待
+                        //如果依赖asset不能spawn，接着等待。因为是按照任务代理执行，有的快有的慢，同时会开启多个代理。后面的主任务开始了，排在前面的依赖项目还未完成
                         if (!m_ResourceLoader.m_AssetPool.CanSpawn(dependencyAssetName))
                         {
                             GameFrameworkLog.Info("{0}依赖项{1}未加载完成", m_Task.AssetName,dependencyAssetName);
@@ -198,18 +203,23 @@ namespace GameFramework.Resource
                     if (IsResourceLoading(resourceName))
                     {
                         m_Task.StartTime = default(DateTime);
+                        GameFrameworkLog.Info("asset：{0}的bundle{1}正在加载", m_Task.AssetName, resourceName);
                         return StartTaskStatus.HasToWait;
                     }
 
                     s_LoadingAssetNames.Add(m_Task.AssetName);
 
-                    //从resource对象池中取出，说明任务可以接着执行
+                    
                     ResourceObject resourceObject = m_ResourceLoader.m_ResourcePool.Spawn(resourceName);
                     if (resourceObject != null)
                     {
+                        GameFrameworkLog.Info("ResourcePool获取到了{0}，说明asset:{1}的bundle已经加好了，返回bundle", resourceName, m_Task.AssetName);
+                        //从resource对象池中取出，说明之前加载过Assetbundle，任务可以接着执行
                         OnResourceObjectReady(resourceObject);
                         return StartTaskStatus.CanResume;
                     }
+
+                    GameFrameworkLog.Info("ResourcePool未获取到了{0}，说明asset:{1}的bundle没加载好，进入加载bundle", resourceName, m_Task.AssetName);
 
                     s_LoadingResourceNames.Add(resourceName);
 
@@ -223,13 +233,16 @@ namespace GameFramework.Resource
                     //根据resource的加载方式
                     if (resourceInfo.LoadType == LoadType.LoadFromFile)
                     {
+                        //文件中加载
                         if (resourceInfo.UseFileSystem)
                         {
+                            //使用文件系统
                             IFileSystem fileSystem = m_ResourceLoader.m_ResourceManager.GetFileSystem(resourceInfo.FileSystemName, resourceInfo.StorageInReadOnly);
                             m_Helper.ReadFile(fileSystem, resourceInfo.ResourceName.FullName);
                         }
                         else
                         {
+                            //硬盘中独立文件读出bundle
                             m_Helper.ReadFile(fullPath);
                         }
                     }
@@ -312,7 +325,7 @@ namespace GameFramework.Resource
                /// <param name="e"></param>
                 private void OnLoadResourceAgentHelperReadFileComplete(object sender, LoadResourceAgentHelperReadFileCompleteEventArgs e)
                 {
-                    GameFrameworkLog.Info("resource加载完成{0}", m_Task.ResourceInfo.ResourceName.Name);
+                    GameFrameworkLog.Info("Assetbundle加载完成：{0}", m_Task.ResourceInfo.ResourceName.Name);
                     ResourceObject resourceObject = ResourceObject.Create(m_Task.ResourceInfo.ResourceName.Name, e.Resource, m_ResourceHelper, m_ResourceLoader);
                     m_ResourceLoader.m_ResourcePool.Register(resourceObject, true);
                     s_LoadingResourceNames.Remove(m_Task.ResourceInfo.ResourceName.Name);
@@ -351,13 +364,14 @@ namespace GameFramework.Resource
                     if (m_Task.IsScene) //如果是场景
                     {
                         assetObject = m_ResourceLoader.m_AssetPool.Spawn(m_Task.AssetName);
+                        GameFrameworkLog.Info("AssetPool获取{0}", m_Task.AssetName);
                     }
 
                     if (assetObject == null)
                     {
                         List<object> dependencyAssets = m_Task.GetDependencyAssets();
                         assetObject = AssetObject.Create(m_Task.AssetName, e.Asset, dependencyAssets, m_Task.ResourceObject.Target, m_ResourceHelper, m_ResourceLoader);
-                        GameFrameworkLog.Info("asset-->{0}加载完成,并且创建assetObject到m_AssetPool缓冲池中", m_Task.AssetName);
+                        GameFrameworkLog.Info("asset-->{0}加载完成,并且创建AssetObject到m_AssetPool缓冲池中", m_Task.AssetName);
                         m_ResourceLoader.m_AssetPool.Register(assetObject, true);
                         m_ResourceLoader.m_AssetToResourceMap.Add(e.Asset, m_Task.ResourceObject.Target);
                         foreach (object dependencyAsset in dependencyAssets)

@@ -10,12 +10,12 @@ using System;
 namespace GameFramework.ObjectPool
 {
     /// <summary>
-    /// 对象基类。用于对象池回收，同时它也是引用池的一种
+    /// 对象基类。用于对象池回收，同时它也是引用池的一种。
     /// </summary>
     public abstract class ObjectBase : IReference
     {
         private string m_Name;
-        private object m_Target;
+        private object m_Target;//需要储存的GameObject或者继承MonoBehavior类对象
         private bool m_Locked;
         private int m_Priority;
         private DateTime m_LastUseTime;
@@ -189,6 +189,7 @@ namespace GameFramework.ObjectPool
         /// </summary>
         protected internal virtual void OnSpawn()
         {
+            GameFrameworkLog.Info("ObjBase.OnSpawn:{0}", m_Name);
         }
 
         /// <summary>

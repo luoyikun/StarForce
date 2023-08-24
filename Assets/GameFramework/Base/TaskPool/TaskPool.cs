@@ -292,8 +292,12 @@ namespace GameFramework
                 m_WaitingTasks.AddFirst(task);
             }
 
+            if (task is TaskBase)
+            {
+                TaskBase taskTmp = task as TaskBase;
+                GameFrameworkLog.Info("增加任务：{0}到m_WaitingTasks.count = {1},任务类型：{2}", taskTmp.m_name, m_WaitingTasks.Count, task);
+            }
             
-            GameFrameworkLog.Info("增加任务：{0}到m_WaitingTasks.count = {1}", task, m_WaitingTasks.Count);
         }
 
         /// <summary>

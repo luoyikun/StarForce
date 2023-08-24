@@ -5,6 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace StarForce
@@ -16,6 +17,7 @@ namespace StarForce
     {
         private void Start()
         {
+
             InitBuiltinComponents();
             InitCustomComponents();
         }

@@ -16,7 +16,7 @@ namespace GameFramework.Resource
         {
             private abstract class LoadResourceTaskBase : TaskBase //派生出 主资源任务，依赖资源任务
             {
-                private static int s_Serial = 0; //加载任务，会永远自增
+                private static int s_Serial = 0; //加载任务序号，会永远自增
 
                 private string m_AssetName;  //asset名字，为工程中assets开始的路径"Assets/GameMain/UI/UIForms/DialogForm.prefab"
                 private Type m_AssetType;
@@ -175,7 +175,7 @@ namespace GameFramework.Resource
                     m_ResourceInfo = resourceInfo;
                     m_DependencyAssetNames = dependencyAssetNames;
                     string sDepend = PublicTools.GetObj2Json(dependencyAssetNames);
-                    GameFrameworkLog.Info("初始化加载任务{0}-->{1}", assetName, sDepend);
+                    GameFrameworkLog.Info("初始化加载任务{0}依赖列表-->{1}", assetName, sDepend);
                     m_name = assetName;
                     //初始化加载任务Assets / GameMain / UI / UIForms / DialogForm.prefab-- >["Assets/GameMain/UI/UISprites/Common/dialog-title-background.png", "Assets/GameMain/UI/UISprites/Common/button-outline.png", "Assets/GameMain/UI/UISprites/Common/dialog-background.png", "Assets/GameMain/UI/UISprites (at ?)/Common/background.png"]
 

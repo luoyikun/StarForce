@@ -149,7 +149,7 @@ namespace UnityGameFramework.Runtime
             }
 
             m_FileFullPath = fullPath;
-            Log.Info("异步读取资源文件{0}", fullPath);
+            Log.Info("AssetBundle.LoadFromFileAsync：{0}", fullPath);
             //加载的是ab
             m_FileAssetBundleCreateRequest = AssetBundle.LoadFromFileAsync(fullPath);
         }
@@ -245,7 +245,7 @@ namespace UnityGameFramework.Runtime
         /// <param name="isScene">要加载的资源是否是场景。</param>
         public override void LoadAsset(object resource, string assetName, Type assetType, bool isScene)
         {
-            Log.Info("AB加载资源代理辅助器{0}里面{1}", resource, assetName);
+            
             if (m_LoadResourceAgentHelperLoadCompleteEventHandler == null || m_LoadResourceAgentHelperUpdateEventHandler == null || m_LoadResourceAgentHelperErrorEventHandler == null)
             {
                 Log.Fatal("Load resource agent helper handler is invalid.");
@@ -287,6 +287,7 @@ namespace UnityGameFramework.Runtime
             }
             else
             {
+                Log.Info("assetBundle :{0} ->LoadAssetAsync:{1}", resource, assetName);
                 if (assetType != null)
                 {
                     m_AssetBundleRequest = assetBundle.LoadAssetAsync(assetName, assetType);

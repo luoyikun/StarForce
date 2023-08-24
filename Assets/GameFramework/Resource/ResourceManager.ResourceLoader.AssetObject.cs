@@ -82,11 +82,13 @@ namespace GameFramework.Resource
                     assetObject.m_ResourceHelper = resourceHelper;
                     assetObject.m_ResourceLoader = resourceLoader;
 
+                    GameFrameworkLog.Info("AssetObject创建：{0}", name);
+
                     //所有依赖的asset 引用+1，它自己次数不会+1
                     foreach (object dependencyAsset in dependencyAssets)
                     {
                         int referenceCount = 0;
-                        GameFrameworkLog.Info("Asset-->{0}引用次数+1", dependencyAsset);
+                        GameFrameworkLog.Info("AssetObject创建-->{0}引用次数+1", dependencyAsset);
                         if (resourceLoader.m_AssetDependencyCount.TryGetValue(dependencyAsset, out referenceCount))
                         {
                             resourceLoader.m_AssetDependencyCount[dependencyAsset] = referenceCount + 1;
@@ -125,7 +127,7 @@ namespace GameFramework.Resource
                     if (!isShutdown)
                     {
                         int targetReferenceCount = 0;
-                        //不为0，说明还被其他依赖，不可以主动卸载
+                        //不为0，有父依赖
                         if (m_ResourceLoader.m_AssetDependencyCount.TryGetValue(Target, out targetReferenceCount) && targetReferenceCount > 0)
                         {
                             throw new GameFrameworkException(Utility.Text.Format("Asset target '{0}' reference count is '{1}' larger than 0.", Name, targetReferenceCount));
@@ -137,7 +139,7 @@ namespace GameFramework.Resource
                             if (m_ResourceLoader.m_AssetDependencyCount.TryGetValue(dependencyAsset, out referenceCount))
                             {
                                 m_ResourceLoader.m_AssetDependencyCount[dependencyAsset] = referenceCount - 1;
-                                //被依赖的asset -1
+                                //子依赖的asset -1
                             }
                             else
                             {
@@ -146,12 +148,13 @@ namespace GameFramework.Resource
                         }
 
                         m_ResourceLoader.m_ResourcePool.Unspawn(m_Resource);
+                        GameFrameworkLog.Info("ResourcePool释放{0}", m_Resource);
                     }
 
                     m_ResourceLoader.m_AssetDependencyCount.Remove(Target);
                     m_ResourceLoader.m_AssetToResourceMap.Remove(Target);
-                    m_ResourceHelper.Release(Target); //AssetBundle.Unload(true),这里传入的是asset
-
+                    m_ResourceHelper.Release(Target); //Resources.UnloadAsset会造成卡顿，等assetbundle释放时一起释放
+                    GameFrameworkLog.Info("释放Asset：{0}", Name);
                 }
             }
         }

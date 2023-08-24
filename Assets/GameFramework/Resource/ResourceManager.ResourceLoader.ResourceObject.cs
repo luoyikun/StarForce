@@ -56,6 +56,7 @@ namespace GameFramework.Resource
                     resourceObject.Initialize(name, target);
                     resourceObject.m_ResourceHelper = resourceHelper;
                     resourceObject.m_ResourceLoader = resourceLoader;
+                    GameFrameworkLog.Info("ResourceObject创建：{0}", name);
                     return resourceObject;
                 }
 
@@ -86,7 +87,7 @@ namespace GameFramework.Resource
                     m_DependencyResources.Add(dependencyResource);
 
                     int referenceCount = 0;
-                    GameFrameworkLog.Info("Resource-->{0}引用+1", dependencyResource);
+                    GameFrameworkLog.Info("ResourceObject-->{0}引用+1", dependencyResource);
                     if (m_ResourceLoader.m_ResourceDependencyCount.TryGetValue(dependencyResource, out referenceCount))
                     {
                         m_ResourceLoader.m_ResourceDependencyCount[dependencyResource] = referenceCount + 1;
@@ -123,7 +124,8 @@ namespace GameFramework.Resource
                     }
 
                     m_ResourceLoader.m_ResourceDependencyCount.Remove(Target);
-                    m_ResourceHelper.Release(Target); //AssetBundle.Unload(true) ,也可能是asset 执行释放，也可能是scene执行释放
+                    m_ResourceHelper.Release(Target); //AssetBundle.Unload(true),释放Assetbundle
+                    GameFrameworkLog.Info("释放ResourceObject：{0}", Name);
                 }
             }
         }

@@ -816,7 +816,7 @@ namespace GameFramework.Resource
             /// <returns></returns>
             private bool LoadDependencyAsset(string assetName, int priority, LoadResourceTaskBase mainTask, object userData)
             {
-                GameFrameworkLog.Info("加载依赖资源{0}", assetName);
+                GameFrameworkLog.Info("检查将要加载的依赖资源{0}", assetName);
                 if (mainTask == null)
                 {
                     throw new GameFrameworkException("Main task is invalid.");
@@ -909,7 +909,7 @@ namespace GameFramework.Resource
                 }
 
                 dependencyAssetNames = assetInfo.GetDependencyAssetNames();
-                GameFrameworkLog.Info("检查资源asset，bundle关系{0},{1}", assetName, resourceInfo.ResourceName.Name);
+                GameFrameworkLog.Info("检查资源asset，bundle关系{0}->{1}", assetName, resourceInfo.ResourceName.Name);
                 return m_ResourceManager.m_ResourceMode == ResourceMode.UpdatableWhilePlaying ? true : resourceInfo.Ready;
             }
 

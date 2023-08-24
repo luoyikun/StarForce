@@ -41,6 +41,7 @@ namespace GameFramework.Entity
                 entityInstanceObject.Initialize(name, entityInstance);
                 entityInstanceObject.m_EntityAsset = entityAsset;
                 entityInstanceObject.m_EntityHelper = entityHelper;
+                GameFrameworkLog.Info("创建实体池对象EntityInstanceObject：{0}，asset：{1}", name, entityAsset);
                 return entityInstanceObject;
             }
 
